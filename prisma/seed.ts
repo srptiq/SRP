@@ -1,10 +1,10 @@
 import { PrismaClient } from "@prisma/client"
-import { PrismaPg } from "@prisma/adapter-pg"
+import { PrismaNeonHttp } from "@prisma/adapter-neon"
 import bcrypt from "bcryptjs"
 
 const connectionString = process.env.DATABASE_URL
 if (!connectionString) throw new Error("DATABASE_URL is required")
-const adapter = new PrismaPg({ connectionString })
+const adapter = new PrismaNeonHttp(connectionString, {} as never)
 const prisma = new PrismaClient({ adapter })
 
 async function main() {

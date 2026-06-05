@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client'
-import { PrismaPg } from '@prisma/adapter-pg'
+import { PrismaNeonHttp } from '@prisma/adapter-neon'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
 
 type HyperdriveBinding = {
@@ -58,7 +58,7 @@ export function getPrismaClient() {
     return cachedClient
   }
 
-  const adapter = new PrismaPg({ connectionString })
+  const adapter = new PrismaNeonHttp(connectionString, {} as never)
   const prismaClient = new PrismaClient({ adapter })
 
   cache.clients.set(connectionString, prismaClient)
