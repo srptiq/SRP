@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  roleId    String
+  role      Role     @relation(fields: [roleId], references: [id])
+  image     String?
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  label       String
+  permissions String[]
+  users       User[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  content     String?
+  metaTitle   String?
+  metaDesc    String?
+  published   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  title       String
+  titleEn    String
+  description String
+  descriptionEn String
+  icon        String?
+  image       String?
+  slug        String   @unique
+  published   Boolean  @default(true)
+  features    String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  name          String
+  nameEn       String
+  description   String
+  descriptionEn String
+  slug          String   @unique
+  logo          String?
+  images        String[]
+  features      String[]
+  featuresEn   String[]
+  problem       String?
+  problemEn    String?
+  targetAudience String?
+  targetAudienceEn String?
+  howItWorks    String?
+  howItWorksEn String?
+  category      String?
+  status        String   @default("active")
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Project {
+  id            String   @id @default(cuid())
+  name          String
+  nameEn       String
+  client        String
+  clientEn     String
+  description   String
+  descriptionEn String
+  category      String
+  images        String[]
+  technologies  String[]
+  status        String   @default("completed")
+  url           String?
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BlogPost {
+  id            String   @id @default(cuid())
+  title         String
+  titleEn      String
+  slug          String   @unique
+  content       String
+  contentEn    String?
+  excerpt       String?
+  excerptEn    String?
+  image         String?
+  categoryId    String?
+  category      BlogCategory? @relation(fields: [categoryId], references: [id])
+  tags          String[]
+  author        String?
+  published     Boolean  @default(false)
+  metaTitle     String?
+  metaDesc      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model BlogCategory {
+  id       String     @id @default(cuid())
+  name     String
+  nameEn  String
+  slug     String     @unique
+  posts    BlogPost[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  questionEn String
+  answer    String
+  answerEn  String
+  category  String?
+  order     Int      @default(0)
+  published Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ContactMessage {
+  id         String   @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  subject    String?
+  message    String
+  product    String?
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model ProjectRequest {
+  id          String   @id @default(cuid())
+  company     String
+  contactName String
+  email       String
+  phone       String
+  projectType String
+  budget      String?
+  description String
+  attachments String[]
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model SiteSetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+}
+
+model MediaFile {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  mimeType  String
+  size      Int?
+  createdAt DateTime @default(now())
+}
+
+model Translation {
+  id        String   @id @default(cuid())
+  key       String
+  locale    String
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([key, locale])
+}

@@ -1,0 +1,119 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-white: #FFFFFF;
+  --color-soft-gray: #F4F7FB;
+  --color-navy: #071426;
+  --color-blue: #126CFF;
+  --color-cyan: #35CFFF;
+  --color-gray-text: #8A94A6;
+  --color-border-light: #E2E8F0;
+  --color-text-heading: #071426;
+  --color-text-body: #404B5A;
+  --color-surface-dim: #D0DAEE;
+  --color-surface-container: #E6EEFF;
+
+  --color-background: #F4F7FB;
+  --color-foreground: #071426;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #071426;
+  --color-popover: #FFFFFF;
+  --color-popover-foreground: #071426;
+  --color-primary: #126CFF;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #35CFFF;
+  --color-secondary-foreground: #071426;
+  --color-muted: #F4F7FB;
+  --color-muted-foreground: #8A94A6;
+  --color-accent: #E6EEFF;
+  --color-accent-foreground: #126CFF;
+  --color-destructive: #FF4444;
+  --color-border: #E2E8F0;
+  --color-input: #E2E8F0;
+  --color-ring: #126CFF;
+
+  --radius: 0.5rem;
+
+  --font-sans: 'IBM Plex Sans Arabic', 'Sora', system-ui, sans-serif;
+  --font-heading: 'Sora', 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  --spacing-gutter: 24px;
+  --spacing-section: 120px;
+  --spacing-container: 1280px;
+}
+
+:root {
+  --background: #F4F7FB;
+  --foreground: #071426;
+  --card: #FFFFFF;
+  --card-foreground: #071426;
+  --popover: #FFFFFF;
+  --popover-foreground: #071426;
+  --primary: #126CFF;
+  --primary-foreground: #FFFFFF;
+  --secondary: #35CFFF;
+  --secondary-foreground: #071426;
+  --muted: #F4F7FB;
+  --muted-foreground: #8A94A6;
+  --accent: #E6EEFF;
+  --accent-foreground: #126CFF;
+  --destructive: #FF4444;
+  --border: #E2E8F0;
+  --input: #E2E8F0;
+  --ring: #126CFF;
+  --radius: 0.5rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .gradient-brand {
+    background: linear-gradient(135deg, #35CFFF, #126CFF);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #35CFFF, #126CFF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .dot-pattern {
+    background-image: radial-gradient(#E2E8F0 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .mesh-grid {
+    background-image:
+      linear-gradient(rgba(18, 108, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(18, 108, 255, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse at center, black, transparent 80%);
+  }
+  .glass-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(226, 232, 240, 0.4);
+  }
+  .container-max {
+    max-width: 1280px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  @media (min-width: 768px) {
+    .container-max {
+      padding-left: 64px;
+      padding-right: 64px;
+    }
+  }
+}
