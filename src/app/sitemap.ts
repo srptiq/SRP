@@ -11,10 +11,6 @@ const staticPages = [
 ]
 
 function localizedPath(locale: string, page: string) {
-  if (locale === "ar") {
-    return page ? `/${page}` : "/"
-  }
-
   return page ? `/${locale}/${page}` : `/${locale}`
 }
 
