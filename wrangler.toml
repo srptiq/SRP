@@ -1,0 +1,9 @@
+name = "srptiq"
+compatibility_date = "2026-06-05"
+compatibility_flags = ["nodejs_compat"]
+main = "cloudflare-pages"
+
+pages_build_output_dir = ".next"
+
+[build]
+command = "npm run build"
