@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest) {
   const authError = await checkAuth(request)
   if (authError) return authError
   try {
-    const body = await request.json()
+    const body = (await request.json()) as { settings?: unknown } & Record<string, unknown>
     const settings = body.settings ?? body
     const parsed = updateSchema.safeParse(settings)
     if (!parsed.success) return Response.json({ success: false, error: parsed.error.issues.map(i => i.message).join(', ') }, { status: 400 })

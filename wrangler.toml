@@ -1,9 +1,16 @@
 name = "srptiq"
 compatibility_date = "2026-06-05"
 compatibility_flags = ["nodejs_compat"]
-main = "cloudflare-pages"
+main = ".open-next/worker.js"
 
-pages_build_output_dir = ".next"
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
-[build]
-command = "npm run build"
+[observability]
+enabled = true
+
+[[hyperdrive]]
+binding = "HYPERDRIVE"
+id = "69b4e7a7912d4d8c8ec59579beb182bc"
+localConnectionString = "postgresql://neondb_owner:npg_RGfy1EBbnet9@ep-lively-tree-aqk1jpmi.c-8.us-east-1.aws.neon.tech/neondb?sslmode=require"

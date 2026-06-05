@@ -28,7 +28,7 @@ export async function PATCH(request: NextRequest) {
   const authError = await checkAuth(request)
   if (authError) return authError
   try {
-    const body = await request.json()
+    const body = (await request.json()) as { id?: string; read?: boolean } & Record<string, unknown>
     const { id, read } = body
     if (!id) return Response.json({ success: false, error: 'id is required' }, { status: 400 })
     try {

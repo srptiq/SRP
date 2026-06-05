@@ -1,26 +1,11 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { IBM_Plex_Sans_Arabic, Sora } from 'next/font/google'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { setRequestLocale } from 'next-intl/server'
 import LocaleFrame from '@/components/layout/LocaleFrame'
 import { routing } from '@/i18n/routing'
 import arMessages from '../../../messages/ar.json'
 import enMessages from '../../../messages/en.json'
-
-const ibmPlexSansArabic = IBM_Plex_Sans_Arabic({
-  variable: '--font-sans',
-  subsets: ['arabic'],
-  weight: ['300', '400', '500', '600', '700'],
-  display: 'swap',
-})
-
-const sora = Sora({
-  variable: '--font-heading',
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-})
 
 type Props = {
   children: React.ReactNode
@@ -70,7 +55,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const messages = localeMessages[locale]
 
   return (
-    <div className={`${ibmPlexSansArabic.variable} ${sora.variable}`}>
+    <div>
       <NextIntlClientProvider locale={locale} messages={messages}>
         <LocaleFrame>{children}</LocaleFrame>
       </NextIntlClientProvider>

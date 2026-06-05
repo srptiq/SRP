@@ -108,7 +108,7 @@ export async function fetchWithMockFallback<T>(url: string, mockData: T): Promis
   try {
     const res = await fetch(url)
     if (!res.ok) throw new Error("API not available")
-    const json = await res.json()
+    const json = (await res.json()) as { data?: T }
     return (json.data ?? json) as T
   } catch {
     return mockData

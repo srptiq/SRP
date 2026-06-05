@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
   const authError = await checkAuth(request)
   if (authError) return authError
   try {
-    const body = await request.json()
+    const body = (await request.json()) as Record<string, unknown>
     const parsed = createSchema.safeParse(body)
     if (!parsed.success) return Response.json({ success: false, error: parsed.error.issues.map(i => i.message).join(', ') }, { status: 400 })
 
@@ -69,7 +69,7 @@ export async function PUT(request: NextRequest) {
   const authError = await checkAuth(request)
   if (authError) return authError
   try {
-    const body = await request.json()
+    const body = (await request.json()) as { id?: string; password?: string } & Record<string, unknown>
     const { id, password, ...data } = body
     if (!id) return Response.json({ success: false, error: 'id is required' }, { status: 400 })
 
