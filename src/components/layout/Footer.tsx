@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { getDirection } from '@/lib/utils'
-import { Mail, Phone, MapPin, Globe } from 'lucide-react'
+import { Mail, Phone, MapPin } from 'lucide-react'
 
 export default function Footer() {
   const t = useTranslations('footer')

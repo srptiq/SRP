@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = parsed.data
 
-    let user: any
+    let user: { id: string; email: string; password: string; role?: { name: string } | null; [key: string]: unknown }
     try {
       const found = await prisma.user.findUnique({ where: { email }, include: { role: true } })
       if (!found) return Response.json({ success: false, error: 'Invalid email or password' }, { status: 401 })
@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       path: '/',
     })
     return response
-  } catch (error) {
+  } catch {
     return Response.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

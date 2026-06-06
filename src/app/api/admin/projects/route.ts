@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
       const data = await prisma.project.create({ data: parsed.data })
       return Response.json({ success: true, data })
     } catch {
-      const data = await memoryStore.createProject(parsed.data as any)
+      const data = await memoryStore.createProject(parsed.data as Parameters<typeof memoryStore.createProject>[0])
       return Response.json({ success: true, data })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }
@@ -64,7 +64,7 @@ export async function PUT(request: NextRequest) {
       const result = await prisma.project.update({ where: { id }, data })
       return Response.json({ success: true, data: result })
     } catch {
-      const result = await memoryStore.updateProject(id, data as any)
+      const result = await memoryStore.updateProject(id, data as Parameters<typeof memoryStore.updateProject>[1])
       if (!result) return Response.json({ success: false, error: 'Project not found' }, { status: 404 })
       return Response.json({ success: true, data: result })
     }

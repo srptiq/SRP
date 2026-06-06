@@ -110,7 +110,7 @@ export default function BlogPage() {
               animate="show"
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {paginated.map((post, i) => {
+              {paginated.map((post) => {
                 const title = isRtl ? post.title : post.titleEn
                 const excerpt = isRtl ? post.excerpt : post.excerptEn
                 const category = isRtl ? post.category : post.categoryEn

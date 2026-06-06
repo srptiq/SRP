@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       const data = await prisma.blogPost.create({ data: parsed.data, include: { category: true } })
       return Response.json({ success: true, data })
     } catch {
-      const data = await memoryStore.createBlogPost(parsed.data as any)
+      const data = await memoryStore.createBlogPost(parsed.data as Parameters<typeof memoryStore.createBlogPost>[0])
       return Response.json({ success: true, data })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }

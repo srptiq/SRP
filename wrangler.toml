@@ -1,7 +1,14 @@
 name = "srptiq"
 compatibility_date = "2026-06-05"
 compatibility_flags = ["nodejs_compat"]
-main = ".open-next/worker.js"
+main = "worker-entry.mjs"
+
+# Custom production domains. `custom_domain = true` provisions the DNS record
+# and an SSL certificate automatically and serves traffic over HTTPS.
+routes = [
+  { pattern = "srptiq.com", custom_domain = true },
+  { pattern = "www.srptiq.com", custom_domain = true },
+]
 
 [assets]
 directory = ".open-next/assets"

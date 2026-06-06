@@ -26,11 +26,11 @@ export async function POST(request: NextRequest) {
     try {
       await prisma.projectRequest.create({ data })
     } catch {
-      await memoryStore.createProjectRequest(data as any)
+      await memoryStore.createProjectRequest(data as Parameters<typeof memoryStore.createProjectRequest>[0])
     }
 
     return Response.json({ success: true, data: { message: 'Project request submitted successfully' } })
-  } catch (error) {
+  } catch {
     return Response.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

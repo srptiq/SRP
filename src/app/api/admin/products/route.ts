@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
       const data = await prisma.product.create({ data: parsed.data })
       return Response.json({ success: true, data })
     } catch {
-      const data = await memoryStore.createProduct(parsed.data as any)
+      const data = await memoryStore.createProduct(parsed.data as Parameters<typeof memoryStore.createProduct>[0])
       return Response.json({ success: true, data })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }
@@ -67,7 +67,7 @@ export async function PUT(request: NextRequest) {
       const result = await prisma.product.update({ where: { id }, data })
       return Response.json({ success: true, data: result })
     } catch {
-      const result = await memoryStore.updateProduct(id, data as any)
+      const result = await memoryStore.updateProduct(id, data as Parameters<typeof memoryStore.updateProduct>[1])
       if (!result) return Response.json({ success: false, error: 'Product not found' }, { status: 404 })
       return Response.json({ success: true, data: result })
     }

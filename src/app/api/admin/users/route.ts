@@ -23,11 +23,11 @@ export async function GET(request: NextRequest) {
   try {
     try {
       const data = await prisma.user.findMany({ include: { role: true }, orderBy: { createdAt: 'desc' } })
-      const sanitized = data.map(({ password, ...u }: { password: string; [key: string]: unknown }) => u)
+      const sanitized = data.map(({ password: _password, ...u }: { password: string; [key: string]: unknown }) => u)
       return Response.json({ success: true, data: sanitized })
     } catch {
       const data = await memoryStore.getUsers()
-      const sanitized = data.map(({ password, ...u }: { password: string; [key: string]: unknown }) => u)
+      const sanitized = data.map(({ password: _password, ...u }: { password: string; [key: string]: unknown }) => u)
       return Response.json({ success: true, data: sanitized })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }
@@ -49,7 +49,7 @@ export async function POST(request: NextRequest) {
       if (existing) return Response.json({ success: false, error: 'Email already exists' }, { status: 409 })
 
       const data = await prisma.user.create({
-        data: { ...rest, password: hashedPassword } as any,
+        data: { ...rest, password: hashedPassword } as Parameters<typeof prisma.user.create>[0]['data'],
         include: { role: true },
       })
       const { password: _, ...userData } = data
@@ -73,17 +73,17 @@ export async function PUT(request: NextRequest) {
     const { id, password, ...data } = body
     if (!id) return Response.json({ success: false, error: 'id is required' }, { status: 400 })
 
-    const updateData: any = { ...data }
+    const updateData: Record<string, unknown> = { ...data }
     if (password) {
       updateData.password = await hashPassword(password)
     }
 
     try {
-      const result = await prisma.user.update({ where: { id }, data: updateData, include: { role: true } })
+      const result = await prisma.user.update({ where: { id }, data: updateData as Parameters<typeof prisma.user.update>[0]['data'], include: { role: true } })
       const { password: _, ...userData } = result
       return Response.json({ success: true, data: userData })
     } catch {
-      const result = await memoryStore.updateUser(id, updateData)
+      const result = await memoryStore.updateUser(id, updateData as Parameters<typeof memoryStore.updateUser>[1])
       if (!result) return Response.json({ success: false, error: 'User not found' }, { status: 404 })
       const { password: _, ...userData } = result
       return Response.json({ success: true, data: userData })

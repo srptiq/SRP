@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     const { name, email, password } = parsed.data
 
-    let user: any
+    let user: { id: string; email: string; password: string; role?: { name: string } | null; [key: string]: unknown }
     try {
       const existing = await prisma.user.findUnique({ where: { email } })
       if (existing) return Response.json({ success: false, error: 'Email already registered' }, { status: 409 })
@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
 
     const { password: _, ...userData } = user
     return Response.json({ success: true, data: { token, user: userData } })
-  } catch (error) {
+  } catch {
     return Response.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     let totalProducts: number, totalServices: number, totalProjects: number
     let totalBlogPosts: number, totalUsers: number, totalFAQ: number
     let totalMessages: number, totalRequests: number
-    let recentMessages: any[], recentRequests: any[]
+    let recentMessages: Awaited<ReturnType<typeof prisma.contactMessage.findMany>>, recentRequests: Awaited<ReturnType<typeof prisma.projectRequest.findMany>>
 
     try {
       const [pCount, sCount, prCount, bCount, uCount, fCount, mCount, rCount, messages, requests] = await Promise.all([

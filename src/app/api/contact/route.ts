@@ -24,11 +24,11 @@ export async function POST(request: NextRequest) {
     try {
       await prisma.contactMessage.create({ data })
     } catch {
-      await memoryStore.createContactMessage(data as any)
+      await memoryStore.createContactMessage(data as Parameters<typeof memoryStore.createContactMessage>[0])
     }
 
     return Response.json({ success: true, data: { message: 'Message sent successfully' } })
-  } catch (error) {
+  } catch {
     return Response.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

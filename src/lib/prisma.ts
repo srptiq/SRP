@@ -1,10 +1,9 @@
-import { PrismaClient } from '@prisma/client'
+// Use the edge client entry: it loads the query-compiler wasm via a static
+// `import('*.wasm')` (workerd-compatible) instead of runtime base64 compilation,
+// which Cloudflare Workers disallow ("Wasm code generation disallowed by embedder").
+import { PrismaClient } from '@prisma/client/edge'
 import { PrismaNeonHttp } from '@prisma/adapter-neon'
 import { getCloudflareContext } from '@opennextjs/cloudflare'
-
-type HyperdriveBinding = {
-  connectionString: string
-}
 
 type PrismaCache = {
   clients: Map<string, PrismaClient>
@@ -24,29 +23,32 @@ function getPrismaCache() {
   return globalForPrisma.__srptiqPrismaCache
 }
 
-function getCloudflareHyperdriveConnectionString() {
+function getCloudflareEnvValue(key: string) {
   try {
     const context = getCloudflareContext()
-    const hyperdrive = (context.env as { HYPERDRIVE?: HyperdriveBinding }).HYPERDRIVE
+    const value = (context.env as unknown as Record<string, unknown>)[key]
 
-    return hyperdrive?.connectionString ?? null
+    return typeof value === 'string' && value.length > 0 ? value : null
   } catch {
     return null
   }
 }
 
 function getConnectionString() {
-  const hyperdriveConnectionString = getCloudflareHyperdriveConnectionString()
+  // The Neon HTTP adapter connects directly to Neon over HTTPS (fetch),
+  // which works natively on Cloudflare Workers. It must receive the direct
+  // Neon connection string — NOT a Hyperdrive proxy string (different transport).
+  const cloudflareDatabaseUrl = getCloudflareEnvValue('DATABASE_URL')
 
-  if (hyperdriveConnectionString) {
-    return hyperdriveConnectionString
+  if (cloudflareDatabaseUrl) {
+    return cloudflareDatabaseUrl
   }
 
   if (process.env.DATABASE_URL) {
     return process.env.DATABASE_URL
   }
 
-  throw new Error('No database connection string found. Set DATABASE_URL locally or attach the HYPERDRIVE binding in Cloudflare.')
+  throw new Error('No database connection string found. Set the DATABASE_URL secret in Cloudflare or DATABASE_URL locally.')
 }
 
 export function getPrismaClient() {

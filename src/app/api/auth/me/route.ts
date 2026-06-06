@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const tokenUser = getTokenUser(request)
     if (!tokenUser) return Response.json({ success: false, error: 'Not authenticated' }, { status: 401 })
 
-    let user: any
+    let user: { id: string; email: string; password: string; role?: { name: string } | null; [key: string]: unknown } | null
     try {
       user = await prisma.user.findUnique({ where: { id: tokenUser.id }, include: { role: true } })
       if (!user) return Response.json({ success: false, error: 'User not found' }, { status: 404 })
@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
 
     const { password: _, ...userData } = user
     return Response.json({ success: true, data: userData })
-  } catch (error) {
+  } catch {
     return Response.json({ success: false, error: 'Internal server error' }, { status: 500 })
   }
 }

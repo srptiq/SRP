@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       const data = await prisma.fAQ.create({ data: parsed.data })
       return Response.json({ success: true, data })
     } catch {
-      const data = await memoryStore.createFAQ(parsed.data as any)
+      const data = await memoryStore.createFAQ(parsed.data as Parameters<typeof memoryStore.createFAQ>[0])
       return Response.json({ success: true, data })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }
@@ -60,7 +60,7 @@ export async function PUT(request: NextRequest) {
       const result = await prisma.fAQ.update({ where: { id }, data })
       return Response.json({ success: true, data: result })
     } catch {
-      const result = await memoryStore.updateFAQ(id, data as any)
+      const result = await memoryStore.updateFAQ(id, data as Parameters<typeof memoryStore.updateFAQ>[1])
       if (!result) return Response.json({ success: false, error: 'FAQ not found' }, { status: 404 })
       return Response.json({ success: true, data: result })
     }

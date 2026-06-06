@@ -12,8 +12,6 @@ const createSchema = z.object({
   features: z.array(z.string()).optional().default([]),
 })
 
-const updateSchema = createSchema.extend({ id: z.string().min(1) }).partial()
-
 async function checkAuth(request: NextRequest) {
   const tokenUser = getTokenUser(request)
   if (!tokenUser) return Response.json({ success: false, error: 'Unauthorized' }, { status: 401 })
@@ -46,7 +44,7 @@ export async function POST(request: NextRequest) {
       const data = await prisma.service.create({ data: parsed.data })
       return Response.json({ success: true, data })
     } catch {
-      const data = await memoryStore.createService(parsed.data as any)
+      const data = await memoryStore.createService(parsed.data as Parameters<typeof memoryStore.createService>[0])
       return Response.json({ success: true, data })
     }
   } catch { return Response.json({ success: false, error: 'Internal server error' }, { status: 500 }) }
@@ -63,7 +61,7 @@ export async function PUT(request: NextRequest) {
       const result = await prisma.service.update({ where: { id }, data })
       return Response.json({ success: true, data: result })
     } catch {
-      const result = await memoryStore.updateService(id, data as any)
+      const result = await memoryStore.updateService(id, data as Parameters<typeof memoryStore.updateService>[1])
       if (!result) return Response.json({ success: false, error: 'Service not found' }, { status: 404 })
       return Response.json({ success: true, data: result })
     }
