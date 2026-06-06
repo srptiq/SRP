@@ -22,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { Project } from "@/types"
 import { adminLanguageName, adminProjectCategoryName, adminProjectStatusName, adminText } from "@/lib/admin-ui"
-import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
 
 const categories = ["web", "mobile", "enterprise", "ai", "design", "other"]
 
@@ -45,8 +45,10 @@ export default function AdminProjectsPage() {
   const [form, setForm] = useState(initialForm)
   const [techInput, setTechInput] = useState("")
 
+  const loadProjects = () => fetchAdminList<Project>("/api/admin/projects").then(setProjects)
+
   useEffect(() => {
-    fetchAdminList<Project>("/api/admin/projects").then(setProjects)
+    loadProjects()
   }, [])
 
   const filtered = projects.filter((p) =>
@@ -69,21 +71,22 @@ export default function AdminProjectsPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name || !form.nameEn) { toast.error(t("required")); return }
-    if (editing) {
-      setProjects((prev) => prev.map((p) => (p.id === editing.id ? { ...p, ...form } : p)))
-      toast.success(t("edit"))
-    } else {
-      setProjects((prev) => [...prev, { id: generateId(), ...form } as Project])
-      toast.success(t("create"))
-    }
+    const ok = editing
+      ? await adminUpdate("/api/admin/projects", { id: editing.id, ...form })
+      : await adminCreate("/api/admin/projects", form)
+    if (!ok) { toast.error(adminText(locale, "فشل الحفظ", "Save failed")); return }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadProjects()
   }
 
-  const togglePublish = (project: Project) => {
-    setProjects((prev) => prev.map((p) => (p.id === project.id ? { ...p, published: !p.published } : p)))
+  const togglePublish = async (project: Project) => {
+    const ok = await adminUpdate("/api/admin/projects", { id: project.id, published: !project.published })
+    if (!ok) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
     toast.success(project.published ? t("draft") : t("publish"))
+    loadProjects()
   }
 
   const addTech = () => {
@@ -197,7 +200,7 @@ export default function AdminProjectsPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setProjects((prev) => prev.filter((p) => p.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/projects?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadProjects() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

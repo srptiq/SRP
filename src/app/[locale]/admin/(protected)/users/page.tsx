@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog"
 import type { User } from "@/types"
 import { adminRoleName, adminText } from "@/lib/admin-ui"
-import { adminRoles, generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { adminRoles, fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
 
 const initialForm = { name: "", email: "", password: "", roleId: "1" }
 
@@ -35,8 +35,10 @@ export default function AdminUsersPage() {
   const [deleting, setDeleting] = useState<User | null>(null)
   const [form, setForm] = useState(initialForm)
 
+  const loadUsers = () => fetchAdminList<User>("/api/admin/users").then(setUsers)
+
   useEffect(() => {
-    fetchAdminList<User>("/api/admin/users").then(setUsers)
+    loadUsers()
   }, [])
 
   const filtered = users.filter((u) =>
@@ -52,32 +54,31 @@ export default function AdminUsersPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.name || !form.email) { toast.error(t("required")); return }
     if (!editing && !form.password) { toast.error(t("required")); return }
 
-    const role = adminRoles.find((r) => r.id === form.roleId) || adminRoles[0]
+    const roleId = form.roleId || adminRoles[0].id
 
+    let ok: boolean
     if (editing) {
-      setUsers((prev) =>
-        prev.map((u) =>
-          u.id === editing.id
-            ? { ...u, name: form.name, email: form.email, role }
-            : u
-        )
-      )
-      toast.success(t("edit"))
+      const payload: Record<string, unknown> = { id: editing.id, name: form.name, email: form.email, roleId }
+      if (form.password) payload.password = form.password
+      ok = await adminUpdate("/api/admin/users", payload)
     } else {
-      const newUser: User = { id: generateId(), name: form.name, email: form.email, role, active: true }
-      setUsers((prev) => [...prev, newUser])
-      toast.success(t("create"))
+      ok = await adminCreate("/api/admin/users", { name: form.name, email: form.email, password: form.password, roleId })
     }
+    if (!ok) { toast.error(adminText(locale, "فشل الحفظ", "Save failed")); return }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadUsers()
   }
 
-  const toggleActive = (user: User) => {
-    setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, active: !u.active } : u)))
+  const toggleActive = async (user: User) => {
+    const ok = await adminUpdate("/api/admin/users", { id: user.id, active: !user.active })
+    if (!ok) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
     toast.success(user.active ? t("inactive") : t("active"))
+    loadUsers()
   }
 
   return (
@@ -162,7 +163,7 @@ export default function AdminUsersPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setUsers((prev) => prev.filter((u) => u.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/users?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadUsers() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

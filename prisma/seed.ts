@@ -162,6 +162,26 @@ async function main() {
     })
   }
 
+  // Create standard site pages (SEO metadata)
+  const pages = [
+    { slug: "home", title: "Home", titleAr: "الرئيسية", metaTitle: "SRPTIQ", metaDesc: "Saudi technology conglomerate" },
+    { slug: "about", title: "About Us", titleAr: "من نحن", metaTitle: "About SRPTIQ", metaDesc: "Learn about SRPTIQ" },
+    { slug: "services", title: "Services", titleAr: "الخدمات", metaTitle: "Our Services", metaDesc: "Technical services" },
+    { slug: "products", title: "Products", titleAr: "المنتجات", metaTitle: "Our Products", metaDesc: "Digital products" },
+    { slug: "projects", title: "Projects", titleAr: "المشاريع", metaTitle: "Our Projects", metaDesc: "Our work" },
+    { slug: "blog", title: "Blog", titleAr: "المدونة", metaTitle: "Blog", metaDesc: "Tech blog" },
+    { slug: "contact", title: "Contact", titleAr: "تواصل معنا", metaTitle: "Contact Us", metaDesc: "Get in touch" },
+    { slug: "faq", title: "FAQ", titleAr: "الأسئلة الشائعة", metaTitle: "FAQ", metaDesc: "Frequently asked questions" },
+  ]
+
+  for (const page of pages) {
+    await prisma.page.upsert({
+      where: { slug: page.slug },
+      update: {},
+      create: { ...page, published: true },
+    })
+  }
+
   console.log("✅ Database seeded successfully!")
   console.log("📧 Admin login: admin@srptiq.com / admin123")
 }

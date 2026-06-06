@@ -32,6 +32,7 @@ model Role {
 model Page {
   id          String   @id @default(cuid())
   title       String
+  titleAr     String?
   slug        String   @unique
   content     String?
   metaTitle   String?

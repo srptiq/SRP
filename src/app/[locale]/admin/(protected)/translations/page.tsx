@@ -20,7 +20,7 @@ import {
   DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
 import { adminLocaleName, adminText } from "@/lib/admin-ui"
-import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminDelete } from "@/lib/admin-mock-data"
 
 interface Translation {
   id: string
@@ -35,8 +35,10 @@ export default function AdminTranslationsPage() {
   const [translations, setTranslations] = useState<Translation[]>([])
   const [search, setSearch] = useState("")
 
+  const loadTranslations = () => fetchAdminList<Translation>("/api/admin/translations").then(setTranslations)
+
   useEffect(() => {
-    fetchAdminList<Translation>("/api/admin/translations").then(setTranslations)
+    loadTranslations()
   }, [])
 
   const [localeFilter, setLocaleFilter] = useState("all")
@@ -67,16 +69,14 @@ export default function AdminTranslationsPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.key || !form.value) { toast.error(t("required")); return }
-    if (editing) {
-      setTranslations((prev) => prev.map((tr) => (tr.id === editing.id ? { ...tr, ...form } : tr)))
-      toast.success(t("edit"))
-    } else {
-      setTranslations((prev) => [...prev, { id: generateId(), ...form }])
-      toast.success(t("create"))
-    }
+    // POST upserts by (key, locale), covering both create and edit.
+    const ok = await adminCreate("/api/admin/translations", form)
+    if (!ok) { toast.error(adminText(locale, "فشل الحفظ", "Save failed")); return }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadTranslations()
   }
 
   const exportJSON = () => {
@@ -93,22 +93,25 @@ export default function AdminTranslationsPage() {
     toast.success(t("export"))
   }
 
-  const importJSON = () => {
+  const importJSON = async () => {
+    let data: Record<string, Record<string, string>>
     try {
-      const data = JSON.parse(importText)
-      const newTranslations: Translation[] = []
-      for (const locale of Object.keys(data)) {
-        for (const key of Object.keys(data[locale])) {
-          newTranslations.push({ id: generateId(), key, locale, value: data[locale][key] })
-        }
-      }
-      setTranslations(newTranslations)
-      toast.success(adminText(locale, `تم استيراد ${newTranslations.length} ترجمة`, `Imported ${newTranslations.length} translations`))
-      setImportOpen(false)
-      setImportText("")
+      data = JSON.parse(importText)
     } catch {
       toast.error(adminText(locale, "صيغة JSON غير صحيحة", "Invalid JSON format"))
+      return
     }
+    let count = 0
+    for (const loc of Object.keys(data)) {
+      for (const key of Object.keys(data[loc])) {
+        const ok = await adminCreate("/api/admin/translations", { key, locale: loc, value: data[loc][key] })
+        if (ok) count++
+      }
+    }
+    toast.success(adminText(locale, `تم استيراد ${count} ترجمة`, `Imported ${count} translations`))
+    setImportOpen(false)
+    setImportText("")
+    loadTranslations()
   }
 
   return (
@@ -223,7 +226,7 @@ export default function AdminTranslationsPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setTranslations((prev) => prev.filter((tr) => tr.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/translations?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadTranslations() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

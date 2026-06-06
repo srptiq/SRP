@@ -38,3 +38,35 @@ export async function fetchAdminObject<T>(url: string, empty: T): Promise<T> {
 export function generateId(): string {
   return uuid()
 }
+
+// Send a mutating request to an admin API endpoint.
+// Returns true only when the server confirms success.
+async function adminSend(url: string, method: string, body?: unknown): Promise<boolean> {
+  try {
+    const res = await fetch(url, {
+      method,
+      headers: body !== undefined ? { "Content-Type": "application/json" } : undefined,
+      body: body !== undefined ? JSON.stringify(body) : undefined,
+    })
+    const json = (await res.json().catch(() => ({}))) as { success?: boolean }
+    return res.ok && json.success !== false
+  } catch {
+    return false
+  }
+}
+
+export function adminCreate(url: string, body: unknown): Promise<boolean> {
+  return adminSend(url, "POST", body)
+}
+
+export function adminUpdate(url: string, body: unknown): Promise<boolean> {
+  return adminSend(url, "PUT", body)
+}
+
+export function adminPatch(url: string, body: unknown): Promise<boolean> {
+  return adminSend(url, "PATCH", body)
+}
+
+export function adminDelete(url: string): Promise<boolean> {
+  return adminSend(url, "DELETE")
+}

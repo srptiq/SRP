@@ -14,10 +14,10 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle,
   DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
-import { adminEmptyValue, adminRequestProjectTypeName } from "@/lib/admin-ui"
+import { adminEmptyValue, adminRequestProjectTypeName, adminText } from "@/lib/admin-ui"
 import { formatDate, cn } from "@/lib/utils"
 import type { ProjectRequest } from "@/types"
-import { fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminPatch, adminDelete } from "@/lib/admin-mock-data"
 
 export default function AdminRequestsPage() {
   const t = useTranslations("admin")
@@ -28,8 +28,10 @@ export default function AdminRequestsPage() {
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [deleting, setDeleting] = useState<ProjectRequest | null>(null)
 
+  const loadRequests = () => fetchAdminList<ProjectRequest>("/api/admin/requests").then(setRequests)
+
   useEffect(() => {
-    fetchAdminList<ProjectRequest>("/api/admin/requests").then(setRequests)
+    loadRequests()
   }, [])
 
   const filtered = requests.filter((r) =>
@@ -38,9 +40,11 @@ export default function AdminRequestsPage() {
     r.email.toLowerCase().includes(search.toLowerCase())
   )
 
-  const markAsRead = (req: ProjectRequest) => {
-    setRequests((prev) => prev.map((r) => (r.id === req.id ? { ...r, read: true } : r)))
+  const markAsRead = async (req: ProjectRequest) => {
+    const ok = await adminPatch("/api/admin/requests", { id: req.id, read: true })
+    if (!ok) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
     toast.success(t("markRead"))
+    loadRequests()
   }
 
   const exportCSV = () => {
@@ -149,7 +153,7 @@ export default function AdminRequestsPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setRequests((prev) => prev.filter((r) => r.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/requests?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadRequests() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

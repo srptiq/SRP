@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { formatDate } from "@/lib/utils"
 import { adminEmptyValue, adminLanguageName, adminText } from "@/lib/admin-ui"
 import type { BlogPost } from "@/types"
-import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
 
 const blogCategories = [
   { id: "1", name: "تقنية", nameEn: "Technology", slug: "technology" },
@@ -53,8 +53,10 @@ export default function AdminBlogPage() {
   const [form, setForm] = useState(initialForm)
   const [tagInput, setTagInput] = useState("")
 
+  const loadPosts = () => fetchAdminList<BlogPost>("/api/admin/blog").then(setPosts)
+
   useEffect(() => {
-    fetchAdminList<BlogPost>("/api/admin/blog").then(setPosts)
+    loadPosts()
   }, [])
 
   const filtered = posts.filter((p) =>
@@ -77,21 +79,25 @@ export default function AdminBlogPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title || !form.titleEn) { toast.error(t("required")); return }
-    if (editing) {
-      setPosts((prev) => prev.map((p) => (p.id === editing.id ? { ...p, ...form, createdAt: p.createdAt } : p)))
-      toast.success(t("edit"))
-    } else {
-      setPosts((prev) => [...prev, { id: generateId(), ...form, createdAt: new Date().toISOString() } as BlogPost])
-      toast.success(t("create"))
-    }
+    // `category` is a relation object, not a DB column — exclude it from the payload.
+    const { category, ...payload } = form
+    void category
+    const ok = editing
+      ? await adminUpdate("/api/admin/blog", { id: editing.id, ...payload })
+      : await adminCreate("/api/admin/blog", payload)
+    if (!ok) { toast.error(adminText(locale, "فشل الحفظ", "Save failed")); return }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadPosts()
   }
 
-  const togglePublish = (post: BlogPost) => {
-    setPosts((prev) => prev.map((p) => (p.id === post.id ? { ...p, published: !p.published } : p)))
+  const togglePublish = async (post: BlogPost) => {
+    const ok = await adminUpdate("/api/admin/blog", { id: post.id, published: !post.published })
+    if (!ok) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
     toast.success(post.published ? t("draft") : t("publish"))
+    loadPosts()
   }
 
   const addTag = () => {
@@ -197,7 +203,7 @@ export default function AdminBlogPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setPosts((prev) => prev.filter((p) => p.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/blog?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadPosts() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

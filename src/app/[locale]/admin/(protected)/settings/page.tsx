@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { SiteSetting } from "@/types"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminUpdate } from "@/lib/admin-mock-data"
 
 export default function AdminSettingsPage() {
   const t = useTranslations("admin")
@@ -37,18 +37,13 @@ export default function AdminSettingsPage() {
 
   const handleSave = async () => {
     setLoading(true)
-    try {
-      await fetch("/api/admin/settings", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ settings }),
-      })
-      toast.success(t("save"))
-    } catch {
-      toast.success(t("save"))
-    } finally {
-      setLoading(false)
+    const ok = await adminUpdate("/api/admin/settings", { settings })
+    setLoading(false)
+    if (!ok) {
+      toast.error(adminText(locale, "فشل الحفظ", "Save failed"))
+      return
     }
+    toast.success(t("save"))
   }
 
   return (

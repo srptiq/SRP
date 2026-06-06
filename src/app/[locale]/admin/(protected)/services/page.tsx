@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import type { Service } from "@/types"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
 
 export default function AdminServicesPage() {
   const t = useTranslations("admin")
@@ -37,8 +37,10 @@ export default function AdminServicesPage() {
   const [form, setForm] = useState<Omit<Service, "id">>(emptyForm)
   const [featureInput, setFeatureInput] = useState("")
 
+  const loadServices = () => fetchAdminList<Service>("/api/admin/services").then(setServices)
+
   useEffect(() => {
-    fetchAdminList<Service>("/api/admin/services").then(setServices)
+    loadServices()
   }, [])
 
   const filtered = services.filter((s) =>
@@ -65,39 +67,44 @@ export default function AdminServicesPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.title || !form.titleEn) {
       toast.error(t("required"))
       return
     }
-
-    if (editing) {
-      setServices((prev) =>
-        prev.map((s) => (s.id === editing.id ? { ...s, ...form } : s))
-      )
-      toast.success(t("edit"))
-    } else {
-      const newService: Service = { id: generateId(), ...form }
-      setServices((prev) => [...prev, newService])
-      toast.success(t("create"))
+    const ok = editing
+      ? await adminUpdate("/api/admin/services", { id: editing.id, ...form })
+      : await adminCreate("/api/admin/services", form)
+    if (!ok) {
+      toast.error(adminText(locale, "فشل الحفظ", "Save failed"))
+      return
     }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadServices()
   }
 
-  const confirmDelete = () => {
-    if (deleting) {
-      setServices((prev) => prev.filter((s) => s.id !== deleting.id))
-      toast.success(t("delete"))
-      setDeleteOpen(false)
-      setDeleting(null)
+  const confirmDelete = async () => {
+    if (!deleting) return
+    const ok = await adminDelete(`/api/admin/services?id=${deleting.id}`)
+    if (!ok) {
+      toast.error(adminText(locale, "فشل الحذف", "Delete failed"))
+      return
     }
+    toast.success(t("delete"))
+    setDeleteOpen(false)
+    setDeleting(null)
+    loadServices()
   }
 
-  const togglePublish = (service: Service) => {
-    setServices((prev) =>
-      prev.map((s) => (s.id === service.id ? { ...s, published: !s.published } : s))
-    )
+  const togglePublish = async (service: Service) => {
+    const ok = await adminUpdate("/api/admin/services", { id: service.id, published: !service.published })
+    if (!ok) {
+      toast.error(adminText(locale, "فشل التحديث", "Update failed"))
+      return
+    }
     toast.success(service.published ? t("draft") : t("publish"))
+    loadServices()
   }
 
   const addFeature = () => {

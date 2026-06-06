@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocale, useTranslations } from "next-intl"
 import { Search, Pencil } from "lucide-react"
 import { toast } from "sonner"
@@ -16,6 +16,7 @@ import {
   DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
+import { fetchAdminList, adminUpdate } from "@/lib/admin-mock-data"
 
 type PageItem = {
   id: string
@@ -35,6 +36,24 @@ export default function AdminPagesPage() {
   const [form, setForm] = useState({ title: "", titleAr: "", metaTitle: "", metaDesc: "" })
   const [dialogOpen, setDialogOpen] = useState(false)
 
+  const loadPages = () =>
+    fetchAdminList<Record<string, unknown>>("/api/admin/pages").then((rows) =>
+      setPages(
+        rows.map((p) => ({
+          id: String(p.id),
+          slug: String(p.slug ?? ""),
+          title: String(p.title ?? ""),
+          titleAr: String(p.titleAr ?? ""),
+          metaTitle: String(p.metaTitle ?? ""),
+          metaDesc: String(p.metaDesc ?? ""),
+        })),
+      ),
+    )
+
+  useEffect(() => {
+    loadPages()
+  }, [])
+
   const filtered = pages.filter((p) =>
     p.title.toLowerCase().includes(search.toLowerCase()) ||
     p.slug.toLowerCase().includes(search.toLowerCase())
@@ -46,14 +65,16 @@ export default function AdminPagesPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
-    if (editing) {
-      setPages((prev) =>
-        prev.map((p) => (p.id === editing.id ? { ...p, ...form } : p))
-      )
-      toast.success(t("edit"))
-      setDialogOpen(false)
+  const handleSave = async () => {
+    if (!editing) return
+    const ok = await adminUpdate("/api/admin/pages", { id: editing.id, ...form })
+    if (!ok) {
+      toast.error(adminText(locale, "فشل الحفظ", "Save failed"))
+      return
     }
+    toast.success(t("edit"))
+    setDialogOpen(false)
+    loadPages()
   }
 
   return (

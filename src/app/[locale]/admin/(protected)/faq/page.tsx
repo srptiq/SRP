@@ -19,7 +19,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { FAQ } from "@/types"
 import { adminFaqCategoryName, adminLanguageName, adminText } from "@/lib/admin-ui"
-import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
 
 const faqCategories = ["general", "project", "services", "pricing", "technical", "other"]
 
@@ -39,8 +39,10 @@ export default function AdminFAQPage() {
   const [deleting, setDeleting] = useState<FAQ | null>(null)
   const [form, setForm] = useState(initialForm)
 
+  const loadFaqs = () => fetchAdminList<FAQ>("/api/admin/faq").then(setFaqs)
+
   useEffect(() => {
-    fetchAdminList<FAQ>("/api/admin/faq").then(setFaqs)
+    loadFaqs()
   }, [])
 
   const filtered = faqs.filter((f) =>
@@ -60,43 +62,41 @@ export default function AdminFAQPage() {
     setDialogOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!form.question || !form.questionEn) { toast.error(t("required")); return }
-    if (editing) {
-      setFaqs((prev) => prev.map((f) => (f.id === editing.id ? { ...f, ...form } : f)))
-      toast.success(t("edit"))
-    } else {
-      setFaqs((prev) => [...prev, { id: generateId(), ...form } as FAQ])
-      toast.success(t("create"))
-    }
+    const ok = editing
+      ? await adminUpdate("/api/admin/faq", { id: editing.id, ...form })
+      : await adminCreate("/api/admin/faq", form)
+    if (!ok) { toast.error(adminText(locale, "فشل الحفظ", "Save failed")); return }
+    toast.success(editing ? t("edit") : t("create"))
     setDialogOpen(false)
+    loadFaqs()
   }
 
-  const togglePublish = (faq: FAQ) => {
-    setFaqs((prev) => prev.map((f) => (f.id === faq.id ? { ...f, published: !f.published } : f)))
+  const togglePublish = async (faq: FAQ) => {
+    const ok = await adminUpdate("/api/admin/faq", { id: faq.id, published: !faq.published })
+    if (!ok) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
     toast.success(faq.published ? t("draft") : t("publish"))
+    loadFaqs()
+  }
+
+  const swapOrder = async (a: FAQ, b: FAQ) => {
+    const ok1 = await adminUpdate("/api/admin/faq", { id: a.id, order: b.order })
+    const ok2 = await adminUpdate("/api/admin/faq", { id: b.id, order: a.order })
+    if (!ok1 || !ok2) { toast.error(adminText(locale, "فشل التحديث", "Update failed")); return }
+    loadFaqs()
   }
 
   const moveUp = (faq: FAQ) => {
     const sorted = [...faqs].sort((a, b) => a.order - b.order)
     const idx = sorted.findIndex((f) => f.id === faq.id)
-    if (idx > 0) {
-      const temp = sorted[idx].order
-      sorted[idx].order = sorted[idx - 1].order
-      sorted[idx - 1].order = temp
-      setFaqs([...sorted])
-    }
+    if (idx > 0) swapOrder(sorted[idx], sorted[idx - 1])
   }
 
   const moveDown = (faq: FAQ) => {
     const sorted = [...faqs].sort((a, b) => a.order - b.order)
     const idx = sorted.findIndex((f) => f.id === faq.id)
-    if (idx < sorted.length - 1) {
-      const temp = sorted[idx].order
-      sorted[idx].order = sorted[idx + 1].order
-      sorted[idx + 1].order = temp
-      setFaqs([...sorted])
-    }
+    if (idx < sorted.length - 1) swapOrder(sorted[idx], sorted[idx + 1])
   }
 
   return (
@@ -193,7 +193,7 @@ export default function AdminFAQPage() {
           <DialogHeader><DialogTitle>{t("delete")}</DialogTitle><DialogDescription>{t("deleteConfirm")}</DialogDescription></DialogHeader>
           <DialogFooter>
             <DialogClose render={<Button variant="outline">{t("cancel")}</Button>} />
-            <Button variant="destructive" onClick={() => { setFaqs((prev) => prev.filter((f) => f.id !== deleting?.id)); toast.success(t("delete")); setDeleteOpen(false) }}>{t("delete")}</Button>
+            <Button variant="destructive" onClick={async () => { if (!deleting) return; const ok = await adminDelete(`/api/admin/faq?id=${deleting.id}`); if (!ok) { toast.error(adminText(locale, "فشل الحذف", "Delete failed")); return } toast.success(t("delete")); setDeleteOpen(false); loadFaqs() }}>{t("delete")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
