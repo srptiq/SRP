@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { SiteSetting } from "@/types"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { mockSettings, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { fetchAdminList } from "@/lib/admin-mock-data"
 
 export default function AdminSettingsPage() {
   const t = useTranslations("admin")
@@ -20,7 +20,7 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    fetchWithMockFallback<SiteSetting[]>("/api/admin/settings", mockSettings).then(setSettings)
+    fetchAdminList<SiteSetting>("/api/admin/settings").then(setSettings)
   }, [])
 
   const get = (key: string) => settings.find((s) => s.key === key)?.value || ""

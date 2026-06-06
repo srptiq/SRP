@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { formatDate } from "@/lib/utils"
 import { adminEmptyValue, adminLanguageName, adminText } from "@/lib/admin-ui"
 import type { BlogPost } from "@/types"
-import { mockBlogPosts, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 const blogCategories = [
   { id: "1", name: "تقنية", nameEn: "Technology", slug: "technology" },
@@ -54,7 +54,7 @@ export default function AdminBlogPage() {
   const [tagInput, setTagInput] = useState("")
 
   useEffect(() => {
-    fetchWithMockFallback<BlogPost[]>("/api/admin/blog", mockBlogPosts).then(setPosts)
+    fetchAdminList<BlogPost>("/api/admin/blog").then(setPosts)
   }, [])
 
   const filtered = posts.filter((p) =>

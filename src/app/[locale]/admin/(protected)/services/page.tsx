@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import type { Service } from "@/types"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { mockServices, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 export default function AdminServicesPage() {
   const t = useTranslations("admin")
@@ -38,7 +38,7 @@ export default function AdminServicesPage() {
   const [featureInput, setFeatureInput] = useState("")
 
   useEffect(() => {
-    fetchWithMockFallback<Service[]>("/api/admin/services", mockServices).then(setServices)
+    fetchAdminList<Service>("/api/admin/services").then(setServices)
   }, [])
 
   const filtered = services.filter((s) =>

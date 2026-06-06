@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useLocale, useTranslations } from "next-intl"
 import { Plus, Pencil, Trash2, Search, Download, Upload } from "lucide-react"
 import { toast } from "sonner"
@@ -20,7 +20,7 @@ import {
   DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
 import { adminLocaleName, adminText } from "@/lib/admin-ui"
-import { mockTranslations, generateId } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 interface Translation {
   id: string
@@ -32,8 +32,13 @@ interface Translation {
 export default function AdminTranslationsPage() {
   const t = useTranslations("admin")
   const locale = useLocale()
-  const [translations, setTranslations] = useState<Translation[]>(mockTranslations)
+  const [translations, setTranslations] = useState<Translation[]>([])
   const [search, setSearch] = useState("")
+
+  useEffect(() => {
+    fetchAdminList<Translation>("/api/admin/translations").then(setTranslations)
+  }, [])
+
   const [localeFilter, setLocaleFilter] = useState("all")
   const [dialogOpen, setDialogOpen] = useState(false)
   const [deleteOpen, setDeleteOpen] = useState(false)

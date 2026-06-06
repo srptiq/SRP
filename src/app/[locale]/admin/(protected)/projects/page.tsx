@@ -22,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { Project } from "@/types"
 import { adminLanguageName, adminProjectCategoryName, adminProjectStatusName, adminText } from "@/lib/admin-ui"
-import { mockProjects, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 const categories = ["web", "mobile", "enterprise", "ai", "design", "other"]
 
@@ -46,7 +46,7 @@ export default function AdminProjectsPage() {
   const [techInput, setTechInput] = useState("")
 
   useEffect(() => {
-    fetchWithMockFallback<Project[]>("/api/admin/projects", mockProjects).then(setProjects)
+    fetchAdminList<Project>("/api/admin/projects").then(setProjects)
   }, [])
 
   const filtered = projects.filter((p) =>

@@ -17,7 +17,7 @@ import {
 import { adminEmptyValue, adminRequestProjectTypeName } from "@/lib/admin-ui"
 import { formatDate, cn } from "@/lib/utils"
 import type { ProjectRequest } from "@/types"
-import { mockRequests, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { fetchAdminList } from "@/lib/admin-mock-data"
 
 export default function AdminRequestsPage() {
   const t = useTranslations("admin")
@@ -29,7 +29,7 @@ export default function AdminRequestsPage() {
   const [deleting, setDeleting] = useState<ProjectRequest | null>(null)
 
   useEffect(() => {
-    fetchWithMockFallback<ProjectRequest[]>("/api/admin/requests", mockRequests).then(setRequests)
+    fetchAdminList<ProjectRequest>("/api/admin/requests").then(setRequests)
   }, [])
 
   const filtered = requests.filter((r) =>

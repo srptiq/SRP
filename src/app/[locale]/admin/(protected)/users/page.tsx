@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/dialog"
 import type { User } from "@/types"
 import { adminRoleName, adminText } from "@/lib/admin-ui"
-import { mockUsers, mockRoles, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { adminRoles, generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 const initialForm = { name: "", email: "", password: "", roleId: "1" }
 
@@ -36,7 +36,7 @@ export default function AdminUsersPage() {
   const [form, setForm] = useState(initialForm)
 
   useEffect(() => {
-    fetchWithMockFallback<User[]>("/api/admin/users", mockUsers).then(setUsers)
+    fetchAdminList<User>("/api/admin/users").then(setUsers)
   }, [])
 
   const filtered = users.filter((u) =>
@@ -56,7 +56,7 @@ export default function AdminUsersPage() {
     if (!form.name || !form.email) { toast.error(t("required")); return }
     if (!editing && !form.password) { toast.error(t("required")); return }
 
-    const role = mockRoles.find((r) => r.id === form.roleId) || mockRoles[0]
+    const role = adminRoles.find((r) => r.id === form.roleId) || adminRoles[0]
 
     if (editing) {
       setUsers((prev) =>
@@ -145,7 +145,7 @@ export default function AdminUsersPage() {
               <Select value={form.roleId} onValueChange={(v) => setForm((p) => ({ ...p, roleId: v ?? "" }))}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  {mockRoles.map((r) => (<SelectItem key={r.id} value={r.id}>{adminRoleName(locale, r.name)}</SelectItem>))}
+                  {adminRoles.map((r) => (<SelectItem key={r.id} value={r.id}>{adminRoleName(locale, r.name)}</SelectItem>))}
                 </SelectContent>
               </Select>
             </div>

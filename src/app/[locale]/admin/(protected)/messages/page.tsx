@@ -16,7 +16,7 @@ import {
 import { adminEmptyValue } from "@/lib/admin-ui"
 import { formatDate, cn } from "@/lib/utils"
 import type { ContactMessage } from "@/types"
-import { mockMessages, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { fetchAdminList } from "@/lib/admin-mock-data"
 
 export default function AdminMessagesPage() {
   const t = useTranslations("admin")
@@ -28,7 +28,7 @@ export default function AdminMessagesPage() {
   const [deleting, setDeleting] = useState<ContactMessage | null>(null)
 
   useEffect(() => {
-    fetchWithMockFallback<ContactMessage[]>("/api/admin/messages", mockMessages).then(setMessages)
+    fetchAdminList<ContactMessage>("/api/admin/messages").then(setMessages)
   }, [])
 
   const filtered = messages.filter((m) =>

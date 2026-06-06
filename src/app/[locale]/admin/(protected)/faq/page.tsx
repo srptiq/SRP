@@ -19,7 +19,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { FAQ } from "@/types"
 import { adminFaqCategoryName, adminLanguageName, adminText } from "@/lib/admin-ui"
-import { mockFAQ, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 const faqCategories = ["general", "project", "services", "pricing", "technical", "other"]
 
@@ -40,7 +40,7 @@ export default function AdminFAQPage() {
   const [form, setForm] = useState(initialForm)
 
   useEffect(() => {
-    fetchWithMockFallback<FAQ[]>("/api/admin/faq", mockFAQ).then(setFaqs)
+    fetchAdminList<FAQ>("/api/admin/faq").then(setFaqs)
   }, [])
 
   const filtered = faqs.filter((f) =>

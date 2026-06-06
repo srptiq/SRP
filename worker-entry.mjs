@@ -9,7 +9,7 @@ export {
   BucketCachePurge,
 } from "./.open-next/worker.js";
 
-export default {
+const handler = {
   async fetch(request, env, ctx) {
     // Cloudflare forwards the original scheme via `x-forwarded-proto`.
     // Permanently redirect any plain-HTTP request to its HTTPS equivalent.
@@ -23,3 +23,5 @@ export default {
     return worker.fetch(request, env, ctx);
   },
 };
+
+export default handler;

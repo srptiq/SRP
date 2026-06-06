@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { mockMessages, mockRequests, mockStats, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { fetchAdminObject } from "@/lib/admin-mock-data"
 import { adminEmptyValue, adminRequestProjectTypeName, adminText } from "@/lib/admin-ui"
 import { cn, formatDate } from "@/lib/utils"
 import type { ContactMessage, DashboardStats, ProjectRequest } from "@/types"
@@ -46,20 +46,27 @@ type DashboardData = DashboardStats & {
   recentRequests: ProjectRequest[]
 }
 
-const mockDashboardData: DashboardData = {
-  ...mockStats,
-  recentMessages: mockMessages.slice(0, 5),
-  recentRequests: mockRequests.slice(0, 5),
+const emptyDashboard: DashboardData = {
+  totalProducts: 0,
+  totalServices: 0,
+  totalProjects: 0,
+  totalBlogPosts: 0,
+  totalMessages: 0,
+  totalRequests: 0,
+  totalUsers: 0,
+  totalFAQ: 0,
+  recentMessages: [],
+  recentRequests: [],
 }
 
 export default function AdminDashboardPage() {
   const t = useTranslations("admin")
   const locale = useLocale()
   const router = useRouter()
-  const [dashboard, setDashboard] = useState<DashboardData>(mockDashboardData)
+  const [dashboard, setDashboard] = useState<DashboardData>(emptyDashboard)
 
   useEffect(() => {
-    fetchWithMockFallback<DashboardData>("/api/admin/dashboard", mockDashboardData).then(setDashboard)
+    fetchAdminObject<DashboardData>("/api/admin/dashboard", emptyDashboard).then(setDashboard)
   }, [])
 
   const unreadMessages = dashboard.recentMessages.filter((message) => !message.read).length

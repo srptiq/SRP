@@ -22,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { Product } from "@/types"
 import { adminLanguageName, adminProductStatusName, adminText } from "@/lib/admin-ui"
-import { mockProducts, generateId, fetchWithMockFallback } from "@/lib/admin-mock-data"
+import { generateId, fetchAdminList } from "@/lib/admin-mock-data"
 
 const initialForm = {
   name: "", nameEn: "", description: "", descriptionEn: "", slug: "",
@@ -46,7 +46,7 @@ export default function AdminProductsPage() {
   const [tagInputEn, setTagInputEn] = useState("")
 
   useEffect(() => {
-    fetchWithMockFallback<Product[]>("/api/admin/products", mockProducts).then(setProducts)
+    fetchAdminList<Product>("/api/admin/products").then(setProducts)
   }, [])
 
   const filtered = products.filter((p) =>

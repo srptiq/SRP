@@ -16,14 +16,22 @@ import {
   DialogDescription, DialogFooter, DialogClose,
 } from "@/components/ui/dialog"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { mockPages } from "@/lib/admin-mock-data"
+
+type PageItem = {
+  id: string
+  slug: string
+  title: string
+  titleAr: string
+  metaTitle: string
+  metaDesc: string
+}
 
 export default function AdminPagesPage() {
   const t = useTranslations("admin")
   const locale = useLocale()
-  const [pages, setPages] = useState(mockPages)
+  const [pages, setPages] = useState<PageItem[]>([])
   const [search, setSearch] = useState("")
-  const [editing, setEditing] = useState<(typeof mockPages)[0] | null>(null)
+  const [editing, setEditing] = useState<PageItem | null>(null)
   const [form, setForm] = useState({ title: "", titleAr: "", metaTitle: "", metaDesc: "" })
   const [dialogOpen, setDialogOpen] = useState(false)
 
@@ -32,7 +40,7 @@ export default function AdminPagesPage() {
     p.slug.toLowerCase().includes(search.toLowerCase())
   )
 
-  const openEdit = (page: (typeof mockPages)[0]) => {
+  const openEdit = (page: PageItem) => {
     setEditing(page)
     setForm({ title: page.title, titleAr: page.titleAr, metaTitle: page.metaTitle, metaDesc: page.metaDesc })
     setDialogOpen(true)
