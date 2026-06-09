@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+import { hasLocale } from 'next-intl'
 import { getTranslations } from 'next-intl/server'
+import { routing } from '@/i18n/routing'
 import HeroSection from '@/components/shared/HeroSection'
 import ServiceCard from '@/components/shared/ServiceCard'
 import ProductCard from '@/components/shared/ProductCard'
@@ -15,6 +18,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
+  if (!hasLocale(routing.locales, locale)) {
+    return { title: 'SRPTIQ | Saudi Technology Conglomerate' }
+  }
   const t = await getTranslations({ locale, namespace: 'hero' })
   return {
     title: 'SRPTIQ | Saudi Technology Conglomerate',
@@ -24,6 +30,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function HomePage({ params }: Props) {
   const { locale } = await params
+  // An unprefixed path (e.g. /contact) lands here with the path segment as an
+  // invalid "locale". Redirect it to the default-locale-prefixed equivalent
+  // (/ar/contact) instead of trying to render with a missing locale.
+  if (!hasLocale(routing.locales, locale)) {
+    redirect(`/${routing.defaultLocale}/${locale}`)
+  }
   const hero = await getTranslations({ locale, namespace: 'hero' })
   const services = await getTranslations({ locale, namespace: 'services' })
   const products = await getTranslations({ locale, namespace: 'products' })

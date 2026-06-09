@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
 import { setRequestLocale } from 'next-intl/server'
 import LocaleFrame from '@/components/layout/LocaleFrame'
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
 
   if (!hasLocale(routing.locales, locale)) {
-    notFound()
+    return { title: 'SRPTIQ | Saudi Technology Conglomerate' }
   }
   const description = localeMessages[locale].hero.description
 
@@ -46,8 +46,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
 
+  // Unprefixed paths (e.g. /contact) resolve here with the path segment as an
+  // invalid "locale". Redirect them to the default-locale-prefixed equivalent
+  // (/ar/contact) so navigation always lands on a real page instead of erroring.
   if (!hasLocale(routing.locales, locale)) {
-    notFound()
+    redirect(`/${routing.defaultLocale}/${locale}`)
   }
 
   setRequestLocale(locale)
