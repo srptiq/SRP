@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { Link } from "@/i18n/navigation"
-import { projects } from "@/lib/projects-data"
+import { projects as fallbackProjects, type ProjectData } from "@/lib/projects-data"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 
@@ -29,6 +29,16 @@ export default function ProjectsPage() {
   const isRtl = locale === "ar"
   const t = useTranslations("projects")
   const [activeFilter, setActiveFilter] = useState("all")
+  const [projects, setProjects] = useState<ProjectData[]>(fallbackProjects)
+
+  useEffect(() => {
+    fetch("/api/projects")
+      .then((r) => r.json() as Promise<{ data?: ProjectData[] }>)
+      .then((d) => {
+        if (Array.isArray(d?.data) && d.data.length > 0) setProjects(d.data)
+      })
+      .catch(() => {})
+  }, [])
 
   const filteredProjects = activeFilter === "all"
     ? projects

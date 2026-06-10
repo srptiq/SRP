@@ -85,14 +85,19 @@ model Project {
   id            String   @id @default(cuid())
   name          String
   nameEn       String
+  slug          String?  @unique
   client        String
   clientEn     String
   description   String
   descriptionEn String
   category      String
+  categoryEn    String?
+  details       String?
+  detailsEn     String?
   images        String[]
   technologies  String[]
   status        String   @default("completed")
+  statusEn      String?
   url           String?
   published     Boolean  @default(true)
   createdAt     DateTime @default(now())

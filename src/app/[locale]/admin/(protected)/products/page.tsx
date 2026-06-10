@@ -192,6 +192,12 @@ export default function AdminProductsPage() {
                 </SelectContent>
               </Select>
             </div>
+            <div className="space-y-1.5"><Label>{adminText(locale, "رابط الشعار", "Logo URL")}</Label><Input value={form.logo} onChange={(e) => setForm((p) => ({ ...p, logo: e.target.value }))} placeholder="/logos/example.png" /></div>
+            <div className="space-y-1.5"><Label>{adminText(locale, "روابط الصور (افصل بفاصلة)", "Image URLs (comma-separated)")}</Label><Input value={form.images.join(", ")} onChange={(e) => setForm((p) => ({ ...p, images: e.target.value.split(",").map((s) => s.trim()).filter(Boolean) }))} placeholder="/img1.png, /img2.png" /></div>
+            {(form.logo || form.images[0]) && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <div className="col-span-2"><img src={form.logo || form.images[0]} alt="" className="h-16 rounded-lg ring-1 ring-border-light object-contain" /></div>
+            )}
             <div className="space-y-1.5 col-span-2"><Label>{`${adminText(locale, "الوصف", "Description")} (${adminLanguageName(locale, "ar")})`}</Label><Textarea value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} /></div>
             <div className="space-y-1.5 col-span-2"><Label>{`${adminText(locale, "الوصف", "Description")} (${adminLanguageName(locale, "en")})`}</Label><Textarea value={form.descriptionEn} onChange={(e) => setForm((p) => ({ ...p, descriptionEn: e.target.value }))} /></div>
             <div className="space-y-1.5"><Label>{`${adminText(locale, "المشكلة", "Problem")} (${adminLanguageName(locale, "ar")})`}</Label><Textarea value={form.problem} onChange={(e) => setForm((p) => ({ ...p, problem: e.target.value }))} /></div>

@@ -3,7 +3,7 @@ import Image from "next/image"
 import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
-import { getProductBySlug } from "@/lib/products-data"
+import { getPublicProductBySlug } from "@/lib/products-db"
 import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
@@ -12,7 +12,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
   const { locale, slug } = await params
-  const product = getProductBySlug(slug)
+  const product = await getPublicProductBySlug(slug)
   if (!product) return { title: "Product Not Found" }
   return {
     title: locale === "ar" ? product.name : product.nameEn,
@@ -29,7 +29,7 @@ export default async function ProductDetailPage({
   const isRtl = locale === "ar"
   const t = await getTranslations("productDetail")
 
-  const product = getProductBySlug(slug)
+  const product = await getPublicProductBySlug(slug)
   if (!product) notFound()
 
   const name = isRtl ? product.name : product.nameEn

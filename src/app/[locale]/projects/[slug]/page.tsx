@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { Link } from "@/i18n/navigation"
-import { getProjectBySlug } from "@/lib/projects-data"
+import { getPublicProjectBySlug } from "@/lib/projects-db"
 import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
@@ -10,7 +10,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
   const { locale, slug } = await params
-  const project = getProjectBySlug(slug)
+  const project = await getPublicProjectBySlug(slug)
   if (!project) return { title: "Project Not Found" }
   return {
     title: locale === "ar" ? project.name : project.nameEn,
@@ -26,7 +26,7 @@ export default async function ProjectDetailPage({
   const { locale, slug } = await params
   const isRtl = locale === "ar"
 
-  const project = getProjectBySlug(slug)
+  const project = await getPublicProjectBySlug(slug)
   if (!project) notFound()
 
   const name = isRtl ? project.name : project.nameEn

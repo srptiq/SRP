@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next"
-import { blogPosts } from "@/lib/blog-data"
-import { products } from "@/lib/products-data"
-import { projects } from "@/lib/projects-data"
+import { getPublicBlogPosts } from "@/lib/blog-db"
+import { getPublicProducts } from "@/lib/products-db"
+import { getPublicProjects } from "@/lib/projects-db"
 
 const locales = ["ar", "en"]
 const baseUrl = "https://srptiq.com"
@@ -14,8 +14,13 @@ function localizedPath(locale: string, page: string) {
   return page ? `/${locale}/${page}` : `/${locale}`
 }
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = []
+  const [products, projects, blogPosts] = await Promise.all([
+    getPublicProducts(),
+    getPublicProjects(),
+    getPublicBlogPosts(),
+  ])
 
   for (const locale of locales) {
     for (const page of staticPages) {

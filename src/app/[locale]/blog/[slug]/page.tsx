@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import { notFound } from "next/navigation"
 import { getTranslations } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
-import { getBlogPostBySlug, blogPosts } from "@/lib/blog-data"
+import { getPublicBlogPostBySlug, getPublicBlogPosts } from "@/lib/blog-db"
 import { formatDate, cn } from "@/lib/utils"
 
 export async function generateMetadata({
@@ -11,7 +11,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>
 }): Promise<Metadata> {
   const { locale, slug } = await params
-  const post = getBlogPostBySlug(slug)
+  const post = await getPublicBlogPostBySlug(slug)
   if (!post) return { title: "Post Not Found" }
   return {
     title: locale === "ar" ? post.title : post.titleEn,
@@ -28,7 +28,7 @@ export default async function BlogDetailPage({
   const isRtl = locale === "ar"
   const t = await getTranslations("blog")
 
-  const post = getBlogPostBySlug(slug)
+  const post = await getPublicBlogPostBySlug(slug)
   if (!post) notFound()
 
   const title = isRtl ? post.title : post.titleEn
@@ -36,7 +36,8 @@ export default async function BlogDetailPage({
   const category = isRtl ? post.category : post.categoryEn
   const author = isRtl ? post.author : post.authorEn
 
-  const relatedPosts = blogPosts
+  const allPosts = await getPublicBlogPosts()
+  const relatedPosts = allPosts
     .filter((p) => p.id !== post.id && (p.category === post.category || p.categoryEn === post.categoryEn))
     .slice(0, 3)
 

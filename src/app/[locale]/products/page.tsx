@@ -2,7 +2,7 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import { getTranslations } from "next-intl/server"
 import { Link } from "@/i18n/navigation"
-import { products } from "@/lib/products-data"
+import { getPublicProducts } from "@/lib/products-db"
 import { cn } from "@/lib/utils"
 
 export async function generateMetadata({
@@ -26,6 +26,7 @@ export default async function ProductsPage({
   const { locale } = await params
   const t = await getTranslations("products")
   const isRtl = locale === "ar"
+  const products = await getPublicProducts()
 
   const statusColors: Record<string, string> = {
     نشط: "bg-green-100 text-green-700",

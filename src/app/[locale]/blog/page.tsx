@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { Link } from "@/i18n/navigation"
-import { blogPosts, blogCategories } from "@/lib/blog-data"
+import { blogPosts as fallbackPosts, blogCategories, type BlogPost } from "@/lib/blog-data"
 import { formatDate, cn } from "@/lib/utils"
 import { motion, AnimatePresence } from "framer-motion"
 
@@ -17,6 +17,18 @@ export default function BlogPage() {
 
   const [activeCategory, setActiveCategory] = useState("all")
   const [currentPage, setCurrentPage] = useState(1)
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(fallbackPosts)
+
+  // Replace the built-in content with posts managed from the admin (database)
+  // whenever any are published.
+  useEffect(() => {
+    fetch("/api/blog")
+      .then((r) => r.json() as Promise<{ data?: BlogPost[] }>)
+      .then((d) => {
+        if (Array.isArray(d?.data) && d.data.length > 0) setBlogPosts(d.data)
+      })
+      .catch(() => {})
+  }, [])
 
   const filtered = activeCategory === "all"
     ? blogPosts
@@ -110,12 +122,13 @@ export default function BlogPage() {
               animate="show"
               className="grid md:grid-cols-2 lg:grid-cols-3 gap-8"
             >
-              {paginated.map((post) => {
+              {paginated.map((post, postIndex) => {
                 const title = isRtl ? post.title : post.titleEn
                 const excerpt = isRtl ? post.excerpt : post.excerptEn
                 const category = isRtl ? post.category : post.categoryEn
                 const author = isRtl ? post.author : post.authorEn
-                const colorIdx = parseInt(post.id, 10) % readerColors.length
+                const parsedId = parseInt(post.id, 10)
+                const colorIdx = (Number.isNaN(parsedId) ? postIndex : parsedId) % readerColors.length
 
                 return (
                   <motion.div key={post.id} variants={item} layout>

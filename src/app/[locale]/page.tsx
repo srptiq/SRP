@@ -9,7 +9,7 @@ import ProductCard from '@/components/shared/ProductCard'
 import FAQItem from '@/components/shared/FAQItem'
 import { Link } from '@/i18n/navigation'
 import { Button } from '@/components/ui/button'
-import { products as productCatalog } from '@/lib/products-data'
+import { getPublicProducts } from '@/lib/products-db'
 import { Package, Server, Users, Briefcase, Star, ArrowUpLeft, Quote } from 'lucide-react'
 
 type Props = {
@@ -36,6 +36,7 @@ export default async function HomePage({ params }: Props) {
   if (!hasLocale(routing.locales, locale)) {
     redirect(`/${routing.defaultLocale}/${locale}`)
   }
+  const productCatalog = await getPublicProducts()
   const hero = await getTranslations({ locale, namespace: 'hero' })
   const services = await getTranslations({ locale, namespace: 'services' })
   const products = await getTranslations({ locale, namespace: 'products' })

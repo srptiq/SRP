@@ -1,5 +1,4 @@
 import type { Role } from "@/types"
-import { v4 as uuid } from "uuid"
 
 // Real role definitions, mirroring the roles seeded in the database.
 // Used only to populate the role selector — these are not sample content.
@@ -33,10 +32,6 @@ export async function fetchAdminObject<T>(url: string, empty: T): Promise<T> {
   } catch {
     return empty
   }
-}
-
-export function generateId(): string {
-  return uuid()
 }
 
 // Build a URL-safe slug from a title. Falls back to a unique id when the input
