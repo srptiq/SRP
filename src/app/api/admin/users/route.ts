@@ -50,7 +50,6 @@ export async function POST(request: NextRequest) {
 
       const data = await prisma.user.create({
         data: { ...rest, password: hashedPassword } as Parameters<typeof prisma.user.create>[0]['data'],
-        include: { role: true },
       })
       const { password: _, ...userData } = data
       return Response.json({ success: true, data: userData })
@@ -79,7 +78,7 @@ export async function PUT(request: NextRequest) {
     }
 
     try {
-      const result = await prisma.user.update({ where: { id }, data: updateData as Parameters<typeof prisma.user.update>[0]['data'], include: { role: true } })
+      const result = await prisma.user.update({ where: { id }, data: updateData as Parameters<typeof prisma.user.update>[0]['data'] })
       const { password: _, ...userData } = result
       return Response.json({ success: true, data: userData })
     } catch {

@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import type { Service } from "@/types"
 import { adminLanguageName, adminText } from "@/lib/admin-ui"
-import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete, slugify } from "@/lib/admin-mock-data"
 
 export default function AdminServicesPage() {
   const t = useTranslations("admin")
@@ -72,9 +72,10 @@ export default function AdminServicesPage() {
       toast.error(t("required"))
       return
     }
+    const payload = { ...form, slug: form.slug.trim() || slugify(form.titleEn || form.title) }
     const ok = editing
-      ? await adminUpdate("/api/admin/services", { id: editing.id, ...form })
-      : await adminCreate("/api/admin/services", form)
+      ? await adminUpdate("/api/admin/services", { id: editing.id, ...payload })
+      : await adminCreate("/api/admin/services", payload)
     if (!ok) {
       toast.error(adminText(locale, "فشل الحفظ", "Save failed"))
       return

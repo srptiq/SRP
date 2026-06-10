@@ -23,7 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { formatDate } from "@/lib/utils"
 import { adminEmptyValue, adminLanguageName, adminText } from "@/lib/admin-ui"
 import type { BlogPost } from "@/types"
-import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete, slugify } from "@/lib/admin-mock-data"
 
 const blogCategories = [
   { id: "1", name: "تقنية", nameEn: "Technology", slug: "technology" },
@@ -81,9 +81,13 @@ export default function AdminBlogPage() {
 
   const handleSave = async () => {
     if (!form.title || !form.titleEn) { toast.error(t("required")); return }
+    if (!form.content.trim()) { toast.error(adminText(locale, "المحتوى (العربية) مطلوب", "Content (Arabic) is required")); return }
+    // The API requires a slug; auto-generate one from the English title when empty.
+    const slug = form.slug.trim() || slugify(form.titleEn || form.title)
     // `category` is a relation object, not a DB column — exclude it from the payload.
-    const { category, ...payload } = form
+    const { category, ...rest } = form
     void category
+    const payload = { ...rest, slug }
     const ok = editing
       ? await adminUpdate("/api/admin/blog", { id: editing.id, ...payload })
       : await adminCreate("/api/admin/blog", payload)

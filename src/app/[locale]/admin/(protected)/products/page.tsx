@@ -22,7 +22,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox"
 import type { Product } from "@/types"
 import { adminLanguageName, adminProductStatusName, adminText } from "@/lib/admin-ui"
-import { fetchAdminList, adminCreate, adminUpdate, adminDelete } from "@/lib/admin-mock-data"
+import { fetchAdminList, adminCreate, adminUpdate, adminDelete, slugify } from "@/lib/admin-mock-data"
 
 const initialForm = {
   name: "", nameEn: "", description: "", descriptionEn: "", slug: "",
@@ -82,9 +82,10 @@ export default function AdminProductsPage() {
       toast.error(t("required"))
       return
     }
+    const payload = { ...form, slug: form.slug.trim() || slugify(form.nameEn || form.name) }
     const ok = editing
-      ? await adminUpdate("/api/admin/products", { id: editing.id, ...form })
-      : await adminCreate("/api/admin/products", form)
+      ? await adminUpdate("/api/admin/products", { id: editing.id, ...payload })
+      : await adminCreate("/api/admin/products", payload)
     if (!ok) {
       toast.error(adminText(locale, "فشل الحفظ", "Save failed"))
       return

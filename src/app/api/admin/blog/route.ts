@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
     const parsed = createSchema.safeParse(body)
     if (!parsed.success) return Response.json({ success: false, error: parsed.error.issues.map(i => i.message).join(', ') }, { status: 400 })
     try {
-      const data = await prisma.blogPost.create({ data: parsed.data, include: { category: true } })
+      const data = await prisma.blogPost.create({ data: parsed.data })
       return Response.json({ success: true, data })
     } catch {
       const data = await memoryStore.createBlogPost(parsed.data as Parameters<typeof memoryStore.createBlogPost>[0])
@@ -65,7 +65,7 @@ export async function PUT(request: NextRequest) {
     const { id, ...data } = body
     if (!id) return Response.json({ success: false, error: 'id is required' }, { status: 400 })
     try {
-      const result = await prisma.blogPost.update({ where: { id }, data, include: { category: true } })
+      const result = await prisma.blogPost.update({ where: { id }, data })
       return Response.json({ success: true, data: result })
     } catch {
       const result = await memoryStore.updateBlogPost(id, data)

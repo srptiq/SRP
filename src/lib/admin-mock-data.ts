@@ -39,6 +39,19 @@ export function generateId(): string {
   return uuid()
 }
 
+// Build a URL-safe slug from a title. Falls back to a unique id when the input
+// has no usable characters (e.g. a purely non-latin title).
+export function slugify(input: string): string {
+  const slug = input
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-+|-+$/g, "")
+  return slug || `item-${Date.now()}`
+}
+
 // Send a mutating request to an admin API endpoint.
 // Returns true only when the server confirms success.
 async function adminSend(url: string, method: string, body?: unknown): Promise<boolean> {
