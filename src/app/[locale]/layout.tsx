@@ -31,12 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: {
-      default: 'SRPTIQ | Saudi Technology Conglomerate',
-      template: '%s | SRPTIQ',
+      default: locale === 'ar' ? 'سبر' : 'SRPTIQ',
+      template: locale === 'ar' ? '%s | سبر' : '%s | SRPTIQ',
     },
     description,
     openGraph: {
-      title: 'SRPTIQ',
+      title: locale === 'ar' ? 'سبر' : 'SRPTIQ',
       description,
       locale: locale === 'ar' ? 'ar_SA' : 'en_US',
     },

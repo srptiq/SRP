@@ -81,14 +81,14 @@ export default async function ProductDetailPage({
 
           <div className="flex flex-col md:flex-row items-start gap-8">
             <div className="flex h-28 w-28 shrink-0 items-center justify-center rounded-3xl border border-white/15 bg-white p-4 shadow-2xl">
-              <Image
+              {product.logo ? <Image
                 src={product.logo}
                 alt={`${name} logo`}
                 width={200}
                 height={120}
                 className="max-h-20 max-w-full w-auto object-contain"
                 priority
-              />
+              /> : <span className="text-2xl font-bold text-navy">{name}</span>}
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-3 mb-4">

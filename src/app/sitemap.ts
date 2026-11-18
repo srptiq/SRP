@@ -7,7 +7,7 @@ const locales = ["ar", "en"]
 const baseUrl = "https://srptiq.com"
 
 const staticPages = [
-  "", "about", "services", "products", "projects", "blog", "faq", "contact", "request-project", "privacy", "terms", "careers",
+  "", "about", "services", "products", "projects", "blog", "faq", "contact", "support", "integrations", "request-project", "privacy", "terms", "careers",
 ]
 
 function localizedPath(locale: string, page: string) {

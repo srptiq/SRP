@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { NextRequest } from 'next/server'
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret'
+function getJwtSecret(): string {
+  const secret = process.env.JWT_SECRET
+  if (!secret) throw new Error('JWT_SECRET is required')
+  return secret
+}
 export const AUTH_COOKIE_NAME = 'token'
 export const LEGACY_AUTH_COOKIE_NAME = 'srptiq_admin_token'
 
@@ -15,12 +19,12 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 }
 
 export function generateToken(payload: { id: string; email: string; role: string }) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
+  return jwt.sign(payload, getJwtSecret(), { expiresIn: '7d' })
 }
 
 export function verifyToken(token: string) {
   try {
-    return jwt.verify(token, JWT_SECRET) as { id: string; email: string; role: string }
+    return jwt.verify(token, getJwtSecret()) as { id: string; email: string; role: string }
   } catch {
     return null
   }

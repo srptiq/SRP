@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "SRPTIQ - Saudi Technology Conglomerate",
-    short_name: "SRPTIQ",
-    description: "شركة تقنية سعودية متخصصة في بناء الأنظمة الذكية، منتجات SaaS، الحلول الرقمية، والذكاء الاصطناعي",
+    name: "سبر | SRPTIQ",
+    short_name: "سبر",
+    description: "سبر تجمع مدار إكس للواجهات واللوحات وأوس لإدارة مكاتب المحاماة.",
     start_url: "/",
     display: "standalone",
     background_color: "#F4F7FB",

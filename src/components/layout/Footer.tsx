@@ -2,8 +2,9 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { Link } from '@/i18n/navigation'
+import { products } from '@/lib/products-data'
 import { getDirection } from '@/lib/utils'
-import { Mail, Phone, MapPin } from 'lucide-react'
+import { Mail, MapPin } from 'lucide-react'
 
 export default function Footer() {
   const t = useTranslations('footer')
@@ -11,21 +12,13 @@ export default function Footer() {
   const locale = useLocale()
   const dir = getDirection(locale)
 
-  const products = [
-    { name: 'إضبار', nameEn: 'Idbbar', href: '/products/idbbar' },
-    { name: 'نسختي', nameEn: 'Nasakhti', href: '/products/nasakhti' },
-    { name: 'بلنسيا', nameEn: 'Blansia', href: '/products/blansia' },
-    { name: 'باكلي', nameEn: 'Backly', href: '/products/backly' },
-    { name: 'مدار X', nameEn: 'Madar X', href: '/products/madar-x' },
-  ] as const
-
   return (
     <footer className="border-t border-border/40 bg-navy text-white" dir={dir}>
       <div className="container-max py-16">
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-4">
             <span className="gradient-brand inline-block rounded-lg px-3 py-1.5 text-sm font-bold text-white">
-              SRPTIQ
+              {locale === 'ar' ? 'سبر' : 'SRPTIQ'}
             </span>
             <p className="text-sm leading-relaxed text-gray-text">
               {t('description')}
@@ -38,8 +31,8 @@ export default function Footer() {
             </h3>
             <ul className="space-y-2">
               {products.map((p) => (
-                <li key={p.href}>
-                  <Link href={p.href} className="text-sm text-gray-text transition-colors hover:text-white">
+                <li key={p.slug}>
+                  <Link href={`/products/${p.slug}`} className="text-sm text-gray-text transition-colors hover:text-white">
                     {locale === 'ar' ? p.name : p.nameEn}
                   </Link>
                 </li>
@@ -67,6 +60,13 @@ export default function Footer() {
                   {nav('contact')}
                 </Link>
               </li>
+              {(['support', 'integrations'] as const).map((section) => (
+                <li key={section}>
+                  <Link href={`/${section}`} className="text-sm text-gray-text transition-colors hover:text-white">
+                    {nav(section)}
+                  </Link>
+                </li>
+              ))}
               <li>
                 <Link href="/careers" className="text-sm text-gray-text transition-colors hover:text-white">
                   {nav('careers')}
@@ -83,10 +83,6 @@ export default function Footer() {
               <li className="flex items-center gap-2 text-sm text-gray-text">
                 <Mail className="size-4 shrink-0 text-blue" />
                 info@srptiq.com
-              </li>
-              <li className="flex items-center gap-2 text-sm text-gray-text">
-                <Phone className="size-4 shrink-0 text-blue" />
-                +966 55 000 0000
               </li>
               <li className="flex items-center gap-2 text-sm text-gray-text">
                 <MapPin className="size-4 shrink-0 text-blue" />

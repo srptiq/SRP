@@ -56,7 +56,7 @@ export default async function ProductsPage({
 
       <section className="py-16 md:py-24">
         <div className="container-max">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 gap-8">
             {products.map((product, index) => {
               const displayName = isRtl ? product.name : product.nameEn
               const displayFeatures = isRtl ? product.features.slice(0, 3) : product.featuresEn.slice(0, 3)
@@ -80,13 +80,13 @@ export default async function ProductsPage({
                     >
                       <div className="flex items-start justify-between mb-4">
                       <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-border-light bg-white p-3 shadow-sm">
-                        <Image
+                        {product.logo ? <Image
                           src={product.logo}
                           alt={`${displayName} logo`}
                           width={96}
                           height={96}
                           className="max-h-10 max-w-full w-auto object-contain"
-                        />
+                        /> : <span className="font-heading font-bold text-navy">{displayName}</span>}
                       </div>
                       <span
                         className={cn(

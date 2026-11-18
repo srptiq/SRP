@@ -15,12 +15,25 @@ import {
 } from "@/components/ui/dialog"
 import { adminEmptyValue, adminText } from "@/lib/admin-ui"
 import { formatDate, cn } from "@/lib/utils"
+import { products } from "@/lib/products-data"
 import type { ContactMessage } from "@/types"
 import { fetchAdminList, adminPatch, adminDelete } from "@/lib/admin-mock-data"
 
 export default function AdminMessagesPage() {
   const t = useTranslations("admin")
   const locale = useLocale()
+  const contact = useTranslations("contact")
+
+  function subjectLabel(subject?: string) {
+    if (subject === "support") return contact("supportTitle")
+    if (subject === "integration") return contact("integrationRequest")
+    return subject ?? ""
+  }
+
+  function productLabel(slug?: string) {
+    const product = products.find((entry) => entry.slug === slug)
+    return product ? (locale === "ar" ? product.name : product.nameEn) : slug
+  }
   const [messages, setMessages] = useState<ContactMessage[]>([])
   const [search, setSearch] = useState("")
   const [expanded, setExpanded] = useState<string | null>(null)
@@ -36,7 +49,9 @@ export default function AdminMessagesPage() {
   const filtered = messages.filter((m) =>
     m.name.toLowerCase().includes(search.toLowerCase()) ||
     m.email.toLowerCase().includes(search.toLowerCase()) ||
-    (m.subject || "").toLowerCase().includes(search.toLowerCase())
+    (m.subject || "").toLowerCase().includes(search.toLowerCase()) ||
+    subjectLabel(m.subject).toLowerCase().includes(search.toLowerCase()) ||
+    (productLabel(m.product) || "").toLowerCase().includes(search.toLowerCase())
   )
 
   const markAsRead = async (msg: ContactMessage) => {
@@ -47,12 +62,13 @@ export default function AdminMessagesPage() {
   }
 
   const exportCSV = () => {
-    const headers = ["name", "email", "phone", "subject", "message", "read", "date"]
+    const headers = ["name", "email", "phone", "subject", "product", "message", "read", "date"]
     const rows = messages.map((message) => [
       message.name,
       message.email,
       message.phone || "",
       message.subject || "",
+      message.product || "",
       message.message,
       String(message.read),
       message.createdAt,
@@ -105,7 +121,7 @@ export default function AdminMessagesPage() {
                   </TableCell>
                   <TableCell>{msg.name}</TableCell>
                   <TableCell className="text-gray-text">{msg.email}</TableCell>
-                  <TableCell className="max-w-40 truncate">{msg.subject || adminEmptyValue(locale)}</TableCell>
+                  <TableCell className="max-w-40 truncate">{subjectLabel(msg.subject) || adminEmptyValue(locale)}</TableCell>
                   <TableCell className="text-gray-text text-xs">{formatDate(msg.createdAt, locale)}</TableCell>
                   <TableCell>
                     <div className="flex items-center justify-end gap-1" onClick={(e) => e.stopPropagation()}>
@@ -128,6 +144,7 @@ export default function AdminMessagesPage() {
                     <TableCell colSpan={6} className="bg-muted/30 p-4">
                       <div className="text-sm space-y-2">
                         {msg.phone && <p><span className="font-medium text-gray-text">{t("phone")}:</span> {msg.phone}</p>}
+                        {msg.product && <p><span className="font-medium text-gray-text">{contact("productLabel")}</span> {productLabel(msg.product)}</p>}
                         <p className="text-foreground whitespace-pre-wrap">{msg.message}</p>
                       </div>
                     </TableCell>

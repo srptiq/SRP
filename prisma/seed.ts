@@ -1,3 +1,4 @@
+import { products } from "../src/lib/products-data"
 import { PrismaClient } from "@prisma/client"
 import { PrismaNeonHttp } from "@prisma/adapter-neon"
 import bcrypt from "bcryptjs"
@@ -44,20 +45,22 @@ async function main() {
     },
   })
 
-  // Create admin user (password: admin123)
-  const hashedPassword = await bcrypt.hash("admin123", 12)
-  await prisma.user.upsert({
-    where: { email: "admin@srptiq.com" },
-    update: {},
-    create: {
-      id: "user-admin",
-      email: "admin@srptiq.com",
-      password: hashedPassword,
-      name: "مدير النظام",
-      roleId: adminRole.id,
-      active: true,
-    },
-  })
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD
+  if (adminPassword) {
+    const hashedPassword = await bcrypt.hash(adminPassword, 12)
+    await prisma.user.upsert({
+      where: { email: "admin@srptiq.com" },
+      update: {},
+      create: {
+        id: "user-admin",
+        email: "admin@srptiq.com",
+        password: hashedPassword,
+        name: "مدير النظام",
+        roleId: adminRole.id,
+        active: true,
+      },
+    })
+  }
 
   // Create services
   const services = [
@@ -76,54 +79,11 @@ async function main() {
   }
 
   // Create products
-  const products = [
-    {
-      id: "prod-01", name: "إضبار", nameEn: "Idbbar", slug: "idbbar",
-      description: "منصة قانونية ذكية لإدارة المكاتب والمحاماة والقضايا والجلسات.",
-      descriptionEn: "An intelligent legal platform for managing law offices, cases, and court sessions.",
-      logo: "/logos/idbbar.png", features: ["إدارة القضايا", "جدولة ذكية", "أرشفة إلكترونية"],
-      featuresEn: ["Case management", "Smart scheduling", "Digital archiving"],
-      status: "نشط", category: "تقنية قانونية",
-    },
-    {
-      id: "prod-02", name: "نسختي", nameEn: "Nasakhti", slug: "nasakhti",
-      description: "تطبيق ذكي يساعد المستخدم على بناء نسخة أفضل من نفسه.",
-      descriptionEn: "A smart app that helps users build a better version of themselves.",
-      logo: "/logos/nasakhti.png", features: ["خطط تطوير", "متابعة عادات", "مجتمع داعم"],
-      featuresEn: ["Development plans", "Habit tracking", "Supportive community"],
-      status: "نشط", category: "تطوير شخصي",
-    },
-    {
-      id: "prod-03", name: "بلنسيا", nameEn: "Blansia", slug: "blansia",
-      description: "علامة فاخرة للورود والهدايا والتجارب الفريدة.",
-      descriptionEn: "A luxury brand for flowers, gifts, and unique experiences.",
-      logo: "/logos/blansia.png", features: ["باقات فاخرة", "توصيل متميز", "تجارب مخصصة"],
-      featuresEn: ["Luxury bouquets", "Premium delivery", "Customized experiences"],
-      status: "نشط", category: "تجارة فاخرة",
-    },
-    {
-      id: "prod-04", name: "باكلي", nameEn: "Backly", slug: "backly",
-      description: "نظام ولاء ونقاط ذكي يعيد العملاء للمتاجر.",
-      descriptionEn: "A smart loyalty and points system that brings customers back to stores.",
-      logo: "/logos/backly.png", features: ["برامج ولاء", "نظام نقاط", "تحليلات"],
-      featuresEn: ["Loyalty programs", "Points system", "Analytics"],
-      status: "بيتا", category: "تسويق وولاء",
-    },
-    {
-      id: "prod-05", name: "مدار X", nameEn: "Madar X", slug: "madar-x",
-      description: "شركة حلول واجهات وهوية خارجية للمشاريع والمتاجر.",
-      descriptionEn: "A signage and identity solutions company for projects and stores.",
-      logo: "/logos/madar-x.png", features: ["تصميم لوحات", "هوية بصرية", "حلول إضاءة"],
-      featuresEn: ["Signage design", "Visual identity", "Lighting solutions"],
-      status: "قريباً", category: "هوية بصرية",
-    },
-  ]
-
   for (const product of products) {
     await prisma.product.upsert({
       where: { slug: product.slug },
       update: {},
-      create: product,
+      create: { ...product, published: true },
     })
   }
 
@@ -183,7 +143,6 @@ async function main() {
   }
 
   console.log("✅ Database seeded successfully!")
-  console.log("📧 Admin login: admin@srptiq.com / admin123")
 }
 
 main()

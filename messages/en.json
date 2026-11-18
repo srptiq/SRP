@@ -10,11 +10,13 @@
     "requestProject": "Request a Project",
     "careers": "Careers",
     "language": "Arabic",
-    "startProject": "Start Your Project"
+    "startProject": "Start Your Project",
+    "support": "Support",
+    "integrations": "Integrations"
   },
   "hero": {
-    "title": "Building Intelligent Systems For The Future",
-    "description": "A Saudi technology company specialized in building SaaS products, intelligent systems, control panels, AI solutions, and modern digital platforms.",
+    "title": "SRPTIQ",
+    "description": "Madar X for façades and signage, and OUS for law firm websites and practice management in a dedicated instance for each firm.",
     "cta1": "Explore Products",
     "cta2": "Start Your Project"
   },
@@ -88,36 +90,9 @@
     ]
   },
   "products": {
-    "title": "Our Products Ecosystem",
-    "subtitle": "Explore our suite of digital products and platforms",
-    "cta": "Discover More",
-    "items": [
-      {
-        "name": "Idbbar",
-        "description": "An intelligent legal platform for managing law offices, cases, and court sessions with high efficiency.",
-        "cta": "Discover More"
-      },
-      {
-        "name": "Nasakhti",
-        "description": "A smart application that helps users build a better version of themselves through AI-powered guidance.",
-        "cta": "Discover More"
-      },
-      {
-        "name": "Blansia",
-        "description": "A luxury brand for flowers, gifts, and premium experiences.",
-        "cta": "Discover More"
-      },
-      {
-        "name": "Backly",
-        "description": "A loyalty and points system that brings customers back to stores.",
-        "cta": "Discover More"
-      },
-      {
-        "name": "Madar X",
-        "description": "Identity and exterior signage solutions for projects and stores.",
-        "cta": "Discover More"
-      }
-    ]
+    "title": "Our Products",
+    "subtitle": "Explore Madar X and OUS.",
+    "cta": "Discover More"
   },
   "whyUs": {
     "title": "Why SRPTIQ",
@@ -200,7 +175,7 @@
   },
   "about": {
     "title": "About SRPTIQ",
-    "description": "SRPTIQ is a Saudi technology company that brings together a diverse portfolio of digital products and intelligent systems under one umbrella. We are not just a design agency — we are a technology conglomerate building scalable, investable digital solutions.",
+    "description": "SRPTIQ is a Saudi company behind Madar X for façades and signage, and OUS for law firm websites and practice management.",
     "vision": "To be the leading technology conglomerate in the region, driving digital innovation and building systems that shape the future.",
     "mission": "To empower businesses and individuals with intelligent, scalable technology solutions that drive real impact and growth.",
     "values": [
@@ -241,6 +216,8 @@
     ]
   },
   "contact": {
+    "productRequired": "Select the product for this request.",
+    "productLabel": "Product",
     "title": "Get In Touch",
     "description": "Have a project in mind? We'd love to hear from you. Send us a message and we'll respond promptly.",
     "name": "Full Name",
@@ -252,7 +229,12 @@
     "send": "Send Message",
     "success": "Message sent successfully! We'll get back to you soon.",
     "info": "Contact Information",
-    "address": "Riyadh, Saudi Arabia"
+    "address": "Riyadh, Saudi Arabia",
+    "supportTitle": "Technical support",
+    "supportDescription": "Select a product and describe the issue and the steps that led to it. Keep passwords and client information out of the request.",
+    "integrationsTitle": "Integrations",
+    "integrationsDescription": "Tell us which system you want to connect and which workflow you want to improve. SRPTIQ will review the request and assess feasibility and requirements.",
+    "integrationRequest": "Integration request"
   },
   "requestProject": {
     "title": "Request a Project",

@@ -1,4 +1,3 @@
-import bcrypt from 'bcryptjs'
 
 interface StoredUser {
   id: string; email: string; password: string; name: string; roleId: string
@@ -81,10 +80,6 @@ class MemoryStore {
     this.roles.push({ id: adminRoleId, name: 'admin', label: 'Admin', permissions: ['all'], createdAt: now(), updatedAt: now() })
     const userRoleId = id()
     this.roles.push({ id: userRoleId, name: 'user', label: 'User', permissions: ['read'], createdAt: now(), updatedAt: now() })
-    this.users.push({
-      id: id(), email: 'admin@srptiq.com', password: bcrypt.hashSync('admin123', 12),
-      name: 'Admin', roleId: adminRoleId, image: null, active: true, createdAt: now(), updatedAt: now(),
-    })
   }
 
   async findUserByEmail(email: string) {

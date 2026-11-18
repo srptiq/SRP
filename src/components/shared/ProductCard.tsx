@@ -17,10 +17,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ name, description, slug, logo, cta, index = 0 }: ProductCardProps) {
   const products: Record<string, { gradient: string }> = {
-    idbbar: { gradient: 'from-blue-600 to-blue-800' },
-    nasakhti: { gradient: 'from-emerald-500 to-teal-600' },
-    blansia: { gradient: 'from-rose-400 to-pink-600' },
-    backly: { gradient: 'from-amber-500 to-orange-600' },
+    ous: { gradient: 'from-blue-600 to-blue-800' },
     'madar-x': { gradient: 'from-violet-500 to-purple-700' },
   }
 

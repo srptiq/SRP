@@ -24,13 +24,13 @@ export default async function AboutPage({ params }: Props) {
 
   const statsData = locale === 'ar'
     ? [
-        { value: '5+', label: 'منتج رقمي' },
+        { value: '2', label: 'منتج' },
         { value: '120+', label: 'عميل' },
         { value: '45+', label: 'نظام سحابي' },
         { value: '200+', label: 'مشروع' },
       ]
     : [
-        { value: '5+', label: 'Digital Products' },
+        { value: '2', label: 'Products' },
         { value: '120+', label: 'Clients & Partners' },
         { value: '45+', label: 'Cloud Systems' },
         { value: '200+', label: 'Completed Projects' },

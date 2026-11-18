@@ -15,7 +15,8 @@ const navLinks = [
   { href: "/blog", key: "blog" },
   { href: "/about", key: "about" },
   { href: "/contact", key: "contact" },
-  { href: "/faq", key: "faq" },
+  { href: "/support", key: "support" },
+  { href: "/integrations", key: "integrations" },
 ] as const
 
 export default function Header() {
@@ -40,14 +41,14 @@ export default function Header() {
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image
             src="/logo.png"
-            alt="SRPTIQ"
+            alt={locale === "ar" ? "سبر" : "SRPTIQ"}
             width={120}
             height={32}
             priority
           />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden xl:flex items-center gap-1">
           {navLinks.map((link) => (
             <Link
               key={link.key}
@@ -62,7 +63,7 @@ export default function Header() {
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-2">
+        <div className="hidden xl:flex items-center gap-2">
           <Button
             variant="ghost"
             size="sm"
@@ -78,7 +79,7 @@ export default function Header() {
           </Link>
         </div>
 
-        <div className="flex md:hidden items-center gap-2">
+        <div className="flex xl:hidden items-center gap-2">
           <Link href="/request-project" onClick={() => setOpen(false)}>
             <Button size="sm" className="bg-blue text-white hover:bg-blue/90">
               {t("startProject")}
@@ -96,7 +97,7 @@ export default function Header() {
       </div>
 
       {open && (
-        <div className="md:hidden border-t border-border-light bg-white">
+        <div className="xl:hidden border-t border-border-light bg-white">
           <div className="flex flex-col gap-1 px-4 pb-4 pt-2">
             {navLinks.map((link) => (
               <Link

@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
   const t = await getTranslations({ locale, namespace: 'hero' })
   return {
-    title: 'SRPTIQ | Saudi Technology Conglomerate',
+    title: locale === 'ar' ? 'سبر | مدار إكس وأوس' : 'SRPTIQ | Madar X and OUS',
     description: t('description'),
   }
 }
@@ -47,20 +47,19 @@ export default async function HomePage({ params }: Props) {
 
   const statsData = locale === 'ar'
     ? [
-        { value: '5+', label: 'منتج رقمي' },
+        { value: '2', label: 'منتج' },
         { value: '120+', label: 'عميل' },
         { value: '45+', label: 'نظام سحابي' },
         { value: '200+', label: 'مشروع' },
       ]
     : [
-        { value: '5+', label: 'Digital Products' },
+        { value: '2', label: 'Products' },
         { value: '120+', label: 'Clients & Partners' },
         { value: '45+', label: 'Cloud Systems' },
         { value: '200+', label: 'Completed Projects' },
       ]
 
   const serviceIds = ['saas', 'mobile', 'websites', 'ai']
-  const featuredProductSlugs = ['idbbar', 'nasakhti', 'blansia', 'backly', 'madar-x']
   const whyUsIcons = [Package, Server, Users, Briefcase, Star, Package]
 
   return (
@@ -136,15 +135,15 @@ export default async function HomePage({ params }: Props) {
             <p className="mt-4 text-muted-foreground">{products('subtitle')}</p>
           </div>
 
-          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
-            {featuredProductSlugs.map((slug, i) => (
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {productCatalog.map((product, i) => (
               <ProductCard
-                key={slug}
-                name={products(`items.${i}.name`)}
-                description={products(`items.${i}.description`)}
-                slug={slug}
-                logo={productCatalog.find((product) => product.slug === slug)?.logo}
-                cta={products(`items.${i}.cta`)}
+                key={product.slug}
+                name={locale === 'ar' ? product.name : product.nameEn}
+                description={locale === 'ar' ? product.description : product.descriptionEn}
+                slug={product.slug}
+                logo={product.logo}
+                cta={locale === 'ar' ? 'تفاصيل المنتج' : 'Product details'}
                 index={i}
               />
             ))}
