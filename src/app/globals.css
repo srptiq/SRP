@@ -117,3 +117,60 @@
     }
   }
 }
+
+/* SRPTIQ public landing page */
+.srp-home { background: #f5f4ef; color: #132824; }
+.srp-wrap { width: min(100% - 3rem, 1180px); margin-inline: auto; }
+.srp-hero { overflow: hidden; background: #102a26; color: #faf9ef; }
+.srp-hero-layout { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: clamp(2rem, 5vw, 6rem); padding-block: clamp(4.5rem, 10vw, 9rem); }
+.srp-brandline { margin-bottom: 1.6rem; color: #bbdeb6; font-weight: 650; }
+.srp-hero h1 { font-weight: 720; font-size: clamp(2.7rem, 5.7vw, 5.95rem); line-height: 1.18; letter-spacing: -.045em; }
+.srp-hero h1 em { font-style: normal; color: #cce7b5; }
+.srp-home:dir(rtl) h1, .srp-home:dir(rtl) h2 { letter-spacing: normal; }
+.srp-intro { max-width: 36rem; margin-top: 1.5rem; color: #d4e1d8; font-size: clamp(1.05rem, 1.45vw, 1.24rem); line-height: 1.85; }
+.srp-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
+.srp-button { display: inline-flex; align-items: center; justify-content: center; gap: .75rem; min-height: 3rem; padding: .6rem 1.05rem; border-radius: .45rem; font-weight: 650; transition: background .2s ease; }
+.srp-button-primary { color: #142820; background: #cce7b5; }
+.srp-button-primary:hover { background: #e4f3d6; }
+.srp-button-outline { border: 1px solid #5f7b70; color: #faf9ef; }
+.srp-button-outline:hover { background: #29443c; }
+.srp-art { position: relative; min-width: 0; width: 100%; max-width: 30rem; aspect-ratio: 1; margin-inline: auto; direction: ltr; isolation: isolate; }
+.srp-art-grid { position: absolute; inset: 0; background-image: linear-gradient(#a4c2a629 1px, transparent 1px), linear-gradient(90deg,#a4c2a629 1px,transparent 1px); background-size: 8% 8%; mask-image: radial-gradient(black 25%, transparent 72%); }
+.srp-orbit { position: absolute; border: 1px solid #819e7c; border-radius: 50%; }
+.srp-orbit-outer { inset: 8%; opacity: .55; }
+.srp-orbit-inner { inset: 19%; border-style: dashed; opacity: .7; }
+.srp-art-core { position: absolute; inset: 31%; display: grid; align-content: center; justify-content: center; gap: 9%; border: 1px solid #9bbb91; border-radius: 25%; background: linear-gradient(145deg,#3b5745,#17322d); box-shadow: 0 0 4rem #a4d5a02e; transform: rotate(-12deg); }
+.srp-art-core span { width: clamp(2rem, 6vw, 5rem); aspect-ratio: 4.4; background: #cce7b5; border-radius: 99px; transform: skewY(-15deg); }
+.srp-art-core span:nth-child(2) { opacity: .67; }
+.srp-art-core span:nth-child(3) { opacity: .35; }
+.srp-art-module { position: absolute; display: inline-flex; align-items: center; gap: .55rem; padding: .7rem .85rem; border: 1px solid #778b72; border-radius: .55rem; background: #183630; color: #e8f4d9; font: 650 .8rem/1 system-ui; letter-spacing: .09em; box-shadow: 0 .55rem 1.7rem #071b1580; }
+.srp-art-ous { top: 13%; left: 8%; }
+.srp-art-madar { bottom: 12%; right: 4%; }
+.srp-products { padding-block: clamp(3.75rem, 8vw, 7rem); scroll-margin-top: 5rem; }
+.srp-section-top { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: .75rem 2rem; margin-bottom: 1.8rem; }
+.srp-home h2 { font-size: clamp(1.8rem, 3.4vw, 3rem); line-height: 1.2; letter-spacing: -.035em; font-weight: 710; }
+.srp-inline-link { display: inline-flex; gap: .45rem; align-items: center; text-decoration: underline; text-underline-offset: .3em; }
+.srp-product-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
+.srp-product { display: flex; flex-direction: column; overflow: hidden; background: #fffefa; border: 1px solid #dcded3; border-radius: .9rem; transition: box-shadow .2s ease; }
+.srp-product:hover { box-shadow: 0 12px 30px #25382d1a; }
+.srp-product-visual { display: grid; place-content: center; justify-items: center; gap: .65rem; min-height: clamp(9rem, 22vw, 16rem); color: #e6f3df; direction: ltr; background: repeating-linear-gradient(135deg,#abc6ac1c 0 1px,transparent 1px 18px),radial-gradient(ellipse at 35% 25%,#436048,#18322a 75%); }
+.srp-product-madar .srp-product-visual { color: #754224; background: repeating-linear-gradient(90deg,#9e644331 0 1px,transparent 1px 13px),linear-gradient(135deg,#f2ddc4,#d7aa82); }
+.srp-product-visual span { font: 750 clamp(2rem, 5vw, 3.75rem)/1 system-ui; letter-spacing: -.045em; }
+.srp-product-copy { display: flex; flex: 1; align-items: start; justify-content: space-between; gap: 1rem; padding: clamp(1.1rem, 2.8vw, 2rem); }
+.srp-product h3 { font-size: 1.55rem; font-weight: 700; }
+.srp-product-copy p { color: #47594f; line-height: 1.8; margin-top: .4rem; }
+.srp-product-arrow { flex: none; color: #2e5342; }
+.srp-contact { background: #e3ebdc; border-top: 1px solid #d4dfce; }
+.srp-contact-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 1.5rem 3rem; align-items: center; padding-block: 3.25rem; }
+.srp-contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .8rem; }
+.srp-contact-grid a { display: flex; gap: .65rem; align-items: center; padding: .9rem; min-height: 3.7rem; border: 1px solid #bac9b8; border-radius: .5rem; }
+.srp-contact-grid a:hover { background: #f4f8f0; }
+.srp-contact-grid a span { flex: 1; font-weight: 650; }
+@media (max-width: 760px) {
+  .srp-hero-layout, .srp-contact-layout { grid-template-columns: 1fr; }
+  .srp-art { max-width: 20rem; }
+}
+@media (max-width: 520px) {
+  .srp-wrap { width: calc(100% - 2rem); }
+  .srp-product-grid, .srp-contact-grid { grid-template-columns: 1fr; }
+}

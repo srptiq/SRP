@@ -1,10 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname, Link } from "@/i18n/navigation"
-import { Menu, X } from "lucide-react"
+import { Layers3, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn, getDirection } from "@/lib/utils"
 
@@ -14,7 +13,6 @@ const navLinks = [
   { href: "/projects", key: "projects" },
   { href: "/blog", key: "blog" },
   { href: "/about", key: "about" },
-  { href: "/contact", key: "contact" },
   { href: "/support", key: "support" },
   { href: "/integrations", key: "integrations" },
 ] as const
@@ -29,23 +27,21 @@ export default function Header() {
 
   const toggleLanguage = () => {
     const next = locale === "ar" ? "en" : "ar"
+    setOpen(false)
     router.replace(pathname, { locale: next })
   }
 
   return (
     <header
       dir={direction}
-      className="sticky top-0 z-50 w-full border-b border-border-light bg-white/80 backdrop-blur-md supports-backdrop-filter:bg-white/60"
+      className="sticky top-0 z-50 w-full border-b border-[#d7ded3] bg-[#fafaf5]/95 backdrop-blur-md"
     >
-      <div className="container-max flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2 shrink-0">
-          <Image
-            src="/logo.png"
-            alt={locale === "ar" ? "سبر" : "SRPTIQ"}
-            width={120}
-            height={32}
-            priority
-          />
+      <div className="container-max flex h-17 items-center justify-between">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 font-heading text-lg font-bold text-[#14312b]">
+          <span className="grid size-9 place-items-center rounded-lg bg-[#15362e] text-[#cce7b5]" aria-hidden="true">
+            <Layers3 size={19} />
+          </span>
+          <span>{locale === "ar" ? "سرب تك" : "SRPTIQ"}</span>
         </Link>
 
         <nav className="hidden xl:flex items-center gap-1">
@@ -55,7 +51,7 @@ export default function Header() {
               href={link.href}
               className={cn(
                 "px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                "text-gray-text hover:text-navy hover:bg-accent"
+                "text-[#42564b] hover:text-[#14312b] hover:bg-[#e5eee1]"
               )}
             >
               {t(link.key)}
@@ -72,23 +68,20 @@ export default function Header() {
           >
             {t("language")}
           </Button>
-          <Link href="/request-project">
-            <Button size="sm" className="bg-blue text-white hover:bg-blue/90">
-              {t("startProject")}
-            </Button>
+          <Link href="/contact" className="rounded-md bg-[#183b30] px-3 py-2 text-sm font-semibold text-white hover:bg-[#295846]">
+            {t("contact")}
           </Link>
         </div>
 
         <div className="flex xl:hidden items-center gap-2">
-          <Link href="/request-project" onClick={() => setOpen(false)}>
-            <Button size="sm" className="bg-blue text-white hover:bg-blue/90">
-              {t("startProject")}
-            </Button>
+          <Link href="/contact" onClick={() => setOpen(false)} className="rounded-md bg-[#183b30] px-3 py-2 text-sm font-semibold text-white hover:bg-[#295846]">
+            {t("contact")}
           </Link>
           <Button
             variant="ghost"
             size="icon-sm"
-            onClick={() => setOpen(!open)}
+            onClick={() => setOpen((value) => !value)}
+            aria-expanded={open}
             aria-label={locale === "ar" ? "القائمة" : "Menu"}
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}

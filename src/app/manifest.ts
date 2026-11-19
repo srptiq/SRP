@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next"
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "سبر | SRPTIQ",
-    short_name: "سبر",
-    description: "سبر تجمع مدار إكس للواجهات واللوحات وأوس لإدارة مكاتب المحاماة.",
+    name: "سرب تك | SRPTIQ",
+    short_name: "سرب تك",
+    description: "سرب تك تجمع مدار إكس للواجهات واللوحات وأوس لإدارة مكاتب المحاماة.",
     start_url: "/",
     display: "standalone",
     background_color: "#F4F7FB",
