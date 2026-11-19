@@ -3,8 +3,7 @@
 import { useState } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter } from "@/i18n/navigation"
-import Image from "next/image"
-import { Eye, EyeOff } from "lucide-react"
+import { Eye, EyeOff, Orbit } from "lucide-react"
 import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -75,11 +74,11 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div dir={direction} className="flex min-h-screen items-center justify-center bg-soft-gray p-4">
-      <div className="w-full max-w-sm">
-        <div className="rounded-xl bg-white p-6 ring-1 ring-border-light shadow-sm">
+    <div dir={direction} className="srp-admin-login grid min-h-dvh place-items-center p-4">
+      <div className="w-full max-w-md">
+        <div className="rounded-2xl bg-white p-6 shadow-2xl sm:p-9">
           <div className="flex flex-col items-center gap-4 mb-6">
-            <Image src="/logo.png" alt="SRPTIQ" width={140} height={40} priority />
+            <div className="flex items-center gap-2 text-lg font-bold text-navy"><Orbit className="size-7 text-blue" aria-hidden="true" />{locale === "ar" ? "سرب تيك" : "SRPTIQ"}</div>
             <div>
               <h1 className="text-lg font-heading font-semibold text-navy text-center">{t("loginTitle")}</h1>
               <p className="text-sm text-gray-text text-center mt-1">{t("loginDesc")}</p>

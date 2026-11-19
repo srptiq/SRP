@@ -22,7 +22,7 @@ export default async function FAQPage({ params }: Props) {
 
   return (
     <>
-      <section className="relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20">
+      <section className="srp-page-hero relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20">
         <div className="mesh-grid pointer-events-none absolute inset-0" />
         <div className="container-max relative z-10 text-center">
           <span className="gradient-brand mb-4 inline-block rounded-full px-4 py-1 text-xs font-medium text-white">

@@ -26,7 +26,7 @@ export default function LocaleFrame({ children }: { children: ReactNode }) {
   return (
     <div className={`flex min-h-full flex-col ${dir === "rtl" ? "rtl" : ""}`} dir={dir}>
       <Header />
-      <main className="flex-1">{children}</main>
+      <main className="srp-public flex-1">{children}</main>
       <Footer />
       <Toaster />
     </div>

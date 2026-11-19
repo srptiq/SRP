@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useTranslations, useLocale } from "next-intl"
 import { useRouter, usePathname, Link } from "@/i18n/navigation"
-import { Layers3, Menu, X } from "lucide-react"
+import { Orbit, Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn, getDirection } from "@/lib/utils"
 
@@ -34,14 +34,14 @@ export default function Header() {
   return (
     <header
       dir={direction}
-      className="sticky top-0 z-50 w-full border-b border-[#d7ded3] bg-[#fafaf5]/95 backdrop-blur-md"
+      className="sticky top-0 z-50 w-full border-b border-[#e3e3f0] bg-[#fbfaff]/95 backdrop-blur-md"
     >
       <div className="container-max flex h-17 items-center justify-between">
-        <Link href="/" className="flex shrink-0 items-center gap-2.5 font-heading text-lg font-bold text-[#14312b]">
-          <span className="grid size-9 place-items-center rounded-lg bg-[#15362e] text-[#cce7b5]" aria-hidden="true">
-            <Layers3 size={19} />
+        <Link href="/" className="flex shrink-0 items-center gap-2.5 font-heading text-lg font-bold text-[#182343]">
+          <span className="grid size-9 place-items-center rounded-lg bg-[#262653] text-[#bfb1ff]" aria-hidden="true">
+            <Orbit size={21} />
           </span>
-          <span>{locale === "ar" ? "سرب تك" : "SRPTIQ"}</span>
+          <span>{locale === "ar" ? "سرب تيك" : "SRPTIQ"}</span>
         </Link>
 
         <nav className="hidden xl:flex items-center gap-1">
@@ -51,7 +51,7 @@ export default function Header() {
               href={link.href}
               className={cn(
                 "px-3 py-2 text-sm font-medium rounded-lg transition-colors",
-                "text-[#42564b] hover:text-[#14312b] hover:bg-[#e5eee1]"
+                "text-[#414767] hover:text-[#182343] hover:bg-[#eeebff]"
               )}
             >
               {t(link.key)}
@@ -68,13 +68,13 @@ export default function Header() {
           >
             {t("language")}
           </Button>
-          <Link href="/contact" className="rounded-md bg-[#183b30] px-3 py-2 text-sm font-semibold text-white hover:bg-[#295846]">
+          <Link href="/contact" className="rounded-md bg-[#4338ca] px-3 py-2 text-sm font-semibold text-white hover:bg-[#3730a3]">
             {t("contact")}
           </Link>
         </div>
 
         <div className="flex xl:hidden items-center gap-2">
-          <Link href="/contact" onClick={() => setOpen(false)} className="rounded-md bg-[#183b30] px-3 py-2 text-sm font-semibold text-white hover:bg-[#295846]">
+          <Link href="/contact" onClick={() => setOpen(false)} className="rounded-md bg-[#4338ca] px-3 py-2 text-sm font-semibold text-white hover:bg-[#3730a3]">
             {t("contact")}
           </Link>
           <Button

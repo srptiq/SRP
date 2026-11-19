@@ -101,10 +101,16 @@ export default function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-xl font-heading font-semibold text-navy">{t("dashboard")}</h1>
-        <p className="mt-0.5 text-sm text-gray-text">{t("welcome")}</p>
-      </div>
+      <section className="srp-dashboard-hero">
+        <div>
+          <h1>{t("dashboard")}</h1>
+          <p>{t("welcome")}</p>
+        </div>
+        <Button variant="secondary" onClick={() => router.push("/admin/messages")}>
+          <MessageSquare className="size-4" />
+          {t("messages")}
+        </Button>
+      </section>
 
       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
         {statCards.map((stat) => (

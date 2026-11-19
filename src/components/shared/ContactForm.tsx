@@ -70,7 +70,7 @@ export default function ContactForm({ topic }: { topic?: 'support' | 'integratio
 
   return (
     <>
-      <section className="relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20">
+      <section className="srp-page-hero relative overflow-hidden pt-24 pb-16 md:pt-32 md:pb-20">
         <div className="mesh-grid pointer-events-none absolute inset-0" />
         <div className="container-max relative z-10 text-center">
           <h1 className="font-heading text-4xl font-bold text-foreground md:text-5xl">{title}</h1>

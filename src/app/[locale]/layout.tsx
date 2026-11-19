@@ -31,12 +31,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: {
-      default: locale === 'ar' ? 'سرب تك' : 'SRPTIQ',
-      template: locale === 'ar' ? '%s | سرب تك' : '%s | SRPTIQ',
+      default: locale === 'ar' ? 'سرب تيك' : 'SRPTIQ',
+      template: locale === 'ar' ? '%s | سرب تيك' : '%s | SRPTIQ',
     },
     description,
     openGraph: {
-      title: locale === 'ar' ? 'سرب تك' : 'SRPTIQ',
+      title: locale === 'ar' ? 'سرب تيك' : 'SRPTIQ',
       description,
       locale: locale === 'ar' ? 'ar_SA' : 'en_US',
     },

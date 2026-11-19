@@ -11,9 +11,9 @@ type Props = { params: Promise<{ locale: string }> }
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params
   return {
-    title: { absolute: locale === 'ar' ? 'سرب تك | أوس ومدار إكس' : 'SRPTIQ | OUS & Madar X' },
+    title: { absolute: locale === 'ar' ? 'سرب تيك | أوس ومدار إكس' : 'SRPTIQ | OUS & Madar X' },
     description: locale === 'ar'
-      ? 'سرب تك تجمع أوس لمواقع مكاتب المحاماة وإدارة أعمالها، ومدار إكس لتصميم وتنفيذ الواجهات واللوحات.'
+      ? 'سرب تيك تجمع أوس لمواقع مكاتب المحاماة وإدارة أعمالها، ومدار إكس لتصميم وتنفيذ الواجهات واللوحات.'
       : 'SRPTIQ brings together OUS for law firm websites and practice management, and Madar X for façades and signage.',
   }
 }
@@ -30,8 +30,8 @@ export default async function HomePage({ params }: Props) {
       <section className="srp-hero">
         <div className="srp-wrap srp-hero-layout">
           <div>
-            <p className="srp-brandline">{ar ? 'سرب تك' : 'SRPTIQ'}</p>
-            <h1>{ar ? <>أنظمة تدير العمل.<br /><em>واجهات تعرّف به.</em></> : <>Systems for the work.<br /><em>Façades for the brand.</em></>}</h1>
+            <p className="srp-brandline">{ar ? 'سرب تيك' : 'SRPTIQ'}</p>
+            <h1>{ar ? <>أعمالك الرقمية.<br /><em>وحضورك على الأرض.</em></> : <>Your digital operations.<br /><em>Your physical presence.</em></>}</h1>
             <p className="srp-intro">{ar
               ? 'أوس يجمع الموقع الإلكتروني لمكتب المحاماة وإدارة أعماله في نسخة خاصة به. ومدار إكس يصمّم وينفّذ واجهات ولوحات المنشآت.'
               : 'OUS pairs a law firm’s website with a dedicated practice management system. Madar X designs and builds façades and signage.'}</p>
@@ -44,16 +44,24 @@ export default async function HomePage({ params }: Props) {
             <div className="srp-art-grid" />
             <div className="srp-orbit srp-orbit-outer" />
             <div className="srp-orbit srp-orbit-inner" />
-            <div className="srp-art-core"><span /><span /><span /></div>
-            <div className="srp-art-module srp-art-ous"><Scale size={21} /><span>OUS</span></div>
-            <div className="srp-art-module srp-art-madar"><Building2 size={21} /><span>MADAR X</span></div>
+            <div className="srp-art-desk">
+              <div className="srp-art-desk-top"><span>OUS</span><Scale size={20} /></div>
+              <div className="srp-art-desk-body">
+                <span className="srp-art-rail" />
+                <div><i /><i /><i /></div>
+              </div>
+            </div>
+            <div className="srp-art-facade">
+              <div className="srp-art-facade-panels" />
+              <span><Building2 size={19} /> MADAR X</span>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="products" className="srp-wrap srp-products">
         <div className="srp-section-top">
-          <h2>{ar ? 'منتجات سرب تك' : 'Our products'}</h2>
+          <h2>{ar ? 'منتجات سرب تيك' : 'Our products'}</h2>
           <Link href="/products" className="srp-inline-link">{ar ? 'عرض المنتجات' : 'View products'}<ArrowUpRight size={18} /></Link>
         </div>
         <div className="srp-product-grid">

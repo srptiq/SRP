@@ -23,7 +23,7 @@ export default async function CareersPage({ params }: Props) {
 
   return (
     <div className="min-h-screen" dir={isRtl ? "rtl" : "ltr"}>
-      <section className="relative overflow-hidden bg-navy py-24 md:py-32">
+      <section className="srp-page-hero relative overflow-hidden bg-navy py-24 md:py-32">
         <div className="mesh-grid absolute inset-0" />
         <div className="container-max relative z-10 text-center">
           <span className="gradient-brand mb-4 inline-block rounded-full px-4 py-1 text-xs font-medium text-white">
